@@ -246,7 +246,12 @@ namespace Impostor.Server.Net.State
                         var netId = reader.ReadPackedUInt32();
                         if (_allObjectsFast.TryGetValue(netId, out var obj))
                         {
-                            await obj.HandleRpc(sender, target, (RpcCalls) reader.ReadByte(), reader);
+                            //await obj.HandleRpc(sender, target, (RpcCalls) reader.ReadByte(), reader);
+                            bool isBlocked = await obj.HandleRpc(sender, target, (RpcCalls) reader.ReadByte(), reader);
+                            if (isBlocked)
+                            {
+                                return false;
+                            }
                         }
                         else
                         {

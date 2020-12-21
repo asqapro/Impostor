@@ -26,12 +26,12 @@ namespace Impostor.Server.Net.Inner.Objects.Components
             _game = game;
         }
 
-        public override async ValueTask HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
+        public override async ValueTask<bool> HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
         {
             if (call != RpcCalls.EnterVent && call != RpcCalls.ExitVent)
             {
                 _logger.LogWarning("{0}: Unknown rpc call {1}", nameof(InnerPlayerPhysics), call);
-                return;
+                return default;
             }
 
             if (!sender.IsOwner(this))
@@ -54,7 +54,7 @@ namespace Impostor.Server.Net.Inner.Objects.Components
 
             await _eventManager.CallAsync(new PlayerVentEvent(_game, sender, _playerControl, (VentLocation)ventId, ventEnter));
 
-            return;
+            return default;
         }
 
         public override bool Serialize(IMessageWriter writer, bool initialState)

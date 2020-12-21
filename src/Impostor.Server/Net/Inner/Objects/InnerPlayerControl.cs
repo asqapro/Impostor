@@ -46,7 +46,7 @@ namespace Impostor.Server.Net.Inner.Objects
 
         public InnerPlayerInfo PlayerInfo { get; internal set; }
 
-        public override async ValueTask HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
+        public override async ValueTask<bool> HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
         {
             switch (call)
             {
@@ -317,6 +317,12 @@ namespace Impostor.Server.Net.Inner.Objects
                     var chat = reader.ReadString();
 
                     await _eventManager.CallAsync(new PlayerChatEvent(_game, sender, this, chat));
+
+                    if (chat.StartsWith("/"))
+                    {
+                        return true;
+                    }
+
                     break;
                 }
 
@@ -424,6 +430,7 @@ namespace Impostor.Server.Net.Inner.Objects
                     break;
                 }
             }
+            return default;
         }
 
         public override bool Serialize(IMessageWriter writer, bool initialState)

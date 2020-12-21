@@ -21,7 +21,7 @@ namespace Impostor.Server.Net.Inner.Objects.Components
             _votes = new Dictionary<int, int[]>();
         }
 
-        public override ValueTask HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
+        public override ValueTask<bool> HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
         {
             if (call != RpcCalls.AddVote)
             {
