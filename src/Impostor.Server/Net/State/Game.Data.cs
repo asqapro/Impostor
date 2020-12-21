@@ -264,7 +264,7 @@ namespace Impostor.Server.Net.State
                                 }
                                 catch (Exception e)
                                 {
-                                    _logger.LogInformation($"" + e);
+                                    _logger.LogInformation($"Exceptioned " + e);
                                 }
 
                                 _logger.LogInformation($"pCopy Post-edit length " + pCopy.Length);
