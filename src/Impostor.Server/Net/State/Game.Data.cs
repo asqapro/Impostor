@@ -255,7 +255,7 @@ namespace Impostor.Server.Net.State
                             {
                                 //return false;
                                 pCopy.RemoveMessage(reader);
-                                return pCopy;
+                                //return pCopy;
                             }
                         }
                         else
