@@ -216,7 +216,7 @@ namespace Impostor.Server.Net.State
                 else if (!TryGetPlayer(targetId, out target))
                 {
                     _logger.LogWarning("Player {0} tried to send GameData to unknown player {1}.", sender.Client.Id, targetId);
-                    return false;
+                    return null;
                 }
 
                 _logger.LogTrace("Received GameData for target {0}.", targetId);
