@@ -161,8 +161,8 @@ namespace Impostor.Server.Net
 
                         reader = await Player.Game.HandleGameDataAsync(reader, Player, toPlayer);
                         
-                        msg = BitConverter.ToString(reader.Buffer).Replace("-","");
                         _logger.LogInformation($"Post-edit length " + msg.Length);
+                        msg = BitConverter.ToString(reader.Buffer).Replace("-","");
                         _logger.LogInformation($"Post-edit " + msg);
                         //if (verified != null)
                         if(reader != null)
