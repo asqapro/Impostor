@@ -191,7 +191,7 @@ namespace Impostor.Server.Net.State
         }
 
         //public async ValueTask<bool> HandleGameDataAsync(IMessageReader parent, ClientPlayer sender, bool toPlayer)
-        public async ValueTask<bool> HandleGameDataAsync(IMessageReader pCopy, ClientPlayer sender, bool toPlayer)
+        public async ValueTask<IMessageReader> HandleGameDataAsync(IMessageReader pCopy, ClientPlayer sender, bool toPlayer)
         {
             // Find target player.
             ClientPlayer target = null;
@@ -255,6 +255,7 @@ namespace Impostor.Server.Net.State
                             {
                                 //return false;
                                 pCopy.RemoveMessage(reader);
+                                return pCopy;
                             }
                         }
                         else
@@ -283,7 +284,7 @@ namespace Impostor.Server.Net.State
                             // TODO: Remove message from stream properly.
                             if (ownerClientId == FakeClientId)
                             {
-                                return false;
+                                return null;
                             }
 
                             innerNetObject.SpawnFlags = (SpawnFlags) reader.ReadByte();
@@ -357,7 +358,7 @@ namespace Impostor.Server.Net.State
                                     sender.Client.Name,
                                     sender.Client.Id,
                                     netId);
-                                return false;
+                                return null;
                             }
 
                             RemoveNetObject(obj);
@@ -386,7 +387,7 @@ namespace Impostor.Server.Net.State
                                 "Player {0} ({1}) tried to send SceneChangeFlag for another player.",
                                 sender.Client.Name,
                                 sender.Client.Id);
-                            return false;
+                            return null;
                         }
 
                         sender.Scene = reader.ReadString();
@@ -412,11 +413,11 @@ namespace Impostor.Server.Net.State
                 if (sender.Client.Player == null)
                 {
                     // Disconnect handler was probably invoked, cancel the rest.
-                    return false;
+                    return null;
                 }
             }
 
-            return true;
+            return pCopy;
         }
 
         private bool AddNetObject(InnerNetObject obj)
