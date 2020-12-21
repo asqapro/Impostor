@@ -190,10 +190,13 @@ namespace Impostor.Server.Net.State
             }
         }
 
-        public async ValueTask<bool> HandleGameDataAsync(IMessageReader parent, ClientPlayer sender, bool toPlayer)
+        //public async ValueTask<bool> HandleGameDataAsync(IMessageReader parent, ClientPlayer sender, bool toPlayer)
+        public async ValueTask<bool> HandleGameDataAsync(IMessageReader pCopy, ClientPlayer sender, bool toPlayer)
         {
             // Find target player.
             ClientPlayer target = null;
+
+            IMessageReader parent = pCopy.Copy();
 
             if (toPlayer)
             {
