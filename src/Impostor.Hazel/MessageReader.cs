@@ -210,10 +210,14 @@ namespace Impostor.Hazel
             // The amount of bytes to copy over ourselves.
             var lengthToCopy = message.Buffer.Length - offsetEnd;
 
+            Console.WriteLine("offsetStart:  " + offsetStart);
+            Console.WriteLine("offsetEnd:    " + offsetEnd);
+            Console.WriteLine("lengthToCopy: " + lengthToCopy);
+
             System.Buffer.BlockCopy(Buffer, offsetEnd, Buffer, offsetStart, lengthToCopy);
 
             Console.WriteLine("Post-edit buffers");
-            Console.WriteLine("To remove: " + msgBuf);
+            Console.WriteLine("To remove:      " + msgBuf);
             Console.WriteLine("To remove from: " + buf);
 
             ((MessageReader) message).Parent.AdjustLength(message.Offset, message.Length + 3);
