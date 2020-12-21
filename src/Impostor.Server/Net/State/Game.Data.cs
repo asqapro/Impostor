@@ -260,7 +260,7 @@ namespace Impostor.Server.Net.State
 
                                 try
                                 {
-                                    pCopy.RemoveMessage(parent);
+                                    pCopy.RemoveMessage(reader);
                                 }
                                 catch (Exception e)
                                 {
