@@ -254,7 +254,8 @@ namespace Impostor.Server.Net.State
                             if (isBlocked)
                             {
                                 //return false;
-                                pCopy.RemoveMessage(reader);
+                                //pCopy.RemoveMessage(reader);
+                                pCopy = reader;
                                 //return pCopy;
                             }
                         }
