@@ -156,11 +156,13 @@ namespace Impostor.Server.Net
                         //var verified = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
                         //var verified = await Player.Game.HandleGameDataAsync(reader, Player, toPlayer);
                         var msg = BitConverter.ToString(reader.Buffer).Replace("-","");
-                        _logger.LogInformation($"Pre=edit " + msg);
+                        _logger.LogInformation($"Pre-edit " + msg);
+                        _logger.LogInformation($"Pre-edit length " + msg.Length);
 
                         reader = await Player.Game.HandleGameDataAsync(reader, Player, toPlayer);
                         
                         msg = BitConverter.ToString(reader.Buffer).Replace("-","");
+                        _logger.LogInformation($"Post-edit length " + msg.Length);
                         _logger.LogInformation($"Post-edit " + msg);
                         //if (verified != null)
                         if(reader != null)
