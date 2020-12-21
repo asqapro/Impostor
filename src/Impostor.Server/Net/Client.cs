@@ -157,14 +157,20 @@ namespace Impostor.Server.Net
                         //var verified = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
                         //var verified = await Player.Game.HandleGameDataAsync(reader, Player, toPlayer);
                         var msg = BitConverter.ToString(rCopy2.Buffer);
-                        _logger.LogInformation($"Pre-edit " + msg);
+                        _logger.LogInformation($"==========MESSAGE START==========");
+                        _logger.LogInformation($"Pre-edit offset " + rCopy2.Offset);
+                        _logger.LogInformation($"Pre-edit position " + rCopy2.Position);
                         _logger.LogInformation($"Pre-edit length " + msg.Length);
+                        _logger.LogInformation($"Pre-edit " + msg);
 
                         rCopy2 = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
 
+                        _logger.LogInformation($"Post-edit offset " + rCopy2.Offset);
+                        _logger.LogInformation($"Post-edit position " + rCopy2.Position);
                         _logger.LogInformation($"Post-edit length " + msg.Length);
                         msg = BitConverter.ToString(rCopy2.Buffer);
                         _logger.LogInformation($"Post-edit " + msg);
+                        _logger.LogInformation($"==========MESSAGE END==========");
                         //if (verified != null)
                         if(reader != null)
                         {

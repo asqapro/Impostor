@@ -249,8 +249,9 @@ namespace Impostor.Server.Net.State
                         {
                             //await obj.HandleRpc(sender, target, (RpcCalls) reader.ReadByte(), reader);
                             bool isBlocked = await obj.HandleRpc(sender, target, (RpcCalls) reader.ReadByte(), reader);
-                            if (!isBlocked)
-                            {                                
+                            if (isBlocked)
+                            {
+                                _logger.LogInformation($"Editing message");
                                 parent.RemoveMessage(reader);
                             }
                         }
