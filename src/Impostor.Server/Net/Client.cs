@@ -154,10 +154,11 @@ namespace Impostor.Server.Net
                     try
                     {
                         //var verified = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
-                        var verified = await Player.Game.HandleGameDataAsync(reader, Player, toPlayer);
-                        if (verified != null)
+                        //var verified = await Player.Game.HandleGameDataAsync(reader, Player, toPlayer);
+                        reader = await Player.Game.HandleGameDataAsync(reader, Player, toPlayer);
+                        //if (verified != null)
+                        if(reader != null)
                         {
-                            reader = verified.Copy();
                             // Broadcast packet to all other players.
                             using (var writer = MessageWriter.Get(messageType))
                             {
