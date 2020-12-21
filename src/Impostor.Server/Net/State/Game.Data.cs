@@ -191,12 +191,10 @@ namespace Impostor.Server.Net.State
         }
 
         //public async ValueTask<bool> HandleGameDataAsync(IMessageReader parent, ClientPlayer sender, bool toPlayer)
-        public async ValueTask<IMessageReader> HandleGameDataAsync(IMessageReader pCopy, ClientPlayer sender, bool toPlayer)
+        public async ValueTask<IMessageReader> HandleGameDataAsync(IMessageReader parent, ClientPlayer sender, bool toPlayer)
         {
             // Find target player.
             ClientPlayer target = null;
-
-            IMessageReader parent = pCopy.Copy();
 
             if (toPlayer)
             {
@@ -251,27 +249,9 @@ namespace Impostor.Server.Net.State
                         {
                             //await obj.HandleRpc(sender, target, (RpcCalls) reader.ReadByte(), reader);
                             bool isBlocked = await obj.HandleRpc(sender, target, (RpcCalls) reader.ReadByte(), reader);
-                            if (isBlocked)
-                            {
-                                //return false;
-                                var msg = BitConverter.ToString(pCopy.Buffer);
-                                _logger.LogInformation($"pCopy Pre-edit " + pCopy);
-                                _logger.LogInformation($"pCopy Pre-edit length " + pCopy.Length);
-
-                                try
-                                {
-                                    pCopy.RemoveMessage(reader);
-                                }
-                                catch (Exception e)
-                                {
-                                    _logger.LogInformation($"Exceptioned " + e);
-                                }
-
-                                _logger.LogInformation($"pCopy Post-edit length " + pCopy.Length);
-                                msg = BitConverter.ToString(pCopy.Buffer);
-                                _logger.LogInformation($"pCopy Post-edit " + msg);
-                                //pCopy = reader;
-                                //return pCopy;
+                            if (!isBlocked)
+                            {                                
+                                parent.RemoveMessage(reader);
                             }
                         }
                         else
@@ -433,7 +413,7 @@ namespace Impostor.Server.Net.State
                 }
             }
 
-            return pCopy;
+            return parent;
         }
 
         private bool AddNetObject(InnerNetObject obj)

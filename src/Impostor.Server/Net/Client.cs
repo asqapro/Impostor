@@ -159,7 +159,7 @@ namespace Impostor.Server.Net
                         _logger.LogInformation($"Pre-edit " + msg);
                         _logger.LogInformation($"Pre-edit length " + msg.Length);
 
-                        reader = await Player.Game.HandleGameDataAsync(reader, Player, toPlayer);
+                        reader = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
 
                         _logger.LogInformation($"Post-edit length " + msg.Length);
                         msg = BitConverter.ToString(reader.Buffer);
