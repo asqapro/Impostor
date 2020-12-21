@@ -258,7 +258,7 @@ namespace Impostor.Server.Net.State
                                 _logger.LogInformation($"pCopy Pre-edit " + pCopy);
                                 _logger.LogInformation($"pCopy Pre-edit length " + pCopy.Length);
 
-                                pCopy.RemoveMessage(pCopy);
+                                pCopy.RemoveMessage(reader);
 
                                 _logger.LogInformation($"pCopy Post-edit length " + pCopy.Length);
                                 msg = BitConverter.ToString(pCopy.Buffer);
