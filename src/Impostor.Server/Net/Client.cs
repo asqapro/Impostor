@@ -156,7 +156,7 @@ namespace Impostor.Server.Net
                         //var verified = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
                         //var verified = await Player.Game.HandleGameDataAsync(reader, Player, toPlayer);
                         reader = await Player.Game.HandleGameDataAsync(reader, Player, toPlayer);
-                        var msg = System.Text.Encoding.Default.GetString(reader.Buffer);
+                        var msg = BitConverter.ToString(reader.Buffer).Replace("-","");
                         _logger.LogInformation($"" + msg);
                         //if (verified != null)
                         if(reader != null)
