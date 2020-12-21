@@ -189,10 +189,17 @@ namespace Impostor.Hazel
 
         public void RemoveMessage(IMessageReader message)
         {
+            Console.WriteLine("Removing message");
             if (message.Buffer != Buffer)
             {
                 throw new ImpostorProtocolException("Tried to remove message from a message that does not have the same buffer.");
             }
+
+            Console.WriteLine("Pre-edit buffers");
+            var msgBuf = BitConverter.ToString(message.Buffer);
+            var buf = BitConverter.ToString(Buffer);
+            Console.WriteLine("To remove: " + msgBuf);
+            Console.WriteLine("To remove from: " + buf);
 
             // Offset of where to start removing.
             var offsetStart = message.Offset - 3;
@@ -204,6 +211,10 @@ namespace Impostor.Hazel
             var lengthToCopy = message.Buffer.Length - offsetEnd;
 
             System.Buffer.BlockCopy(Buffer, offsetEnd, Buffer, offsetStart, lengthToCopy);
+
+            Console.WriteLine("Post-edit buffers");
+            Console.WriteLine("To remove: " + msgBuf);
+            Console.WriteLine("To remove from: " + buf);
 
             ((MessageReader) message).Parent.AdjustLength(message.Offset, message.Length + 3);
         }
