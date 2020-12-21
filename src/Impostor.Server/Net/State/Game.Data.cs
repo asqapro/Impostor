@@ -253,7 +253,8 @@ namespace Impostor.Server.Net.State
                             bool isBlocked = await obj.HandleRpc(sender, target, (RpcCalls) reader.ReadByte(), reader);
                             if (isBlocked)
                             {
-                                return false;
+                                //return false;
+                                pCopy.RemoveMessage(reader);
                             }
                         }
                         else
