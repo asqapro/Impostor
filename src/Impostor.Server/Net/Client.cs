@@ -149,20 +149,21 @@ namespace Impostor.Server.Net
 
                     // Handle packet.
                     using var readerCopy = reader.Copy();
+                    var rCopy2 = reader.Copy();
 
                     // TODO: Return value, either a bool (to cancel) or a writer (to cancel (null) or modify/overwrite).
                     try
                     {
                         //var verified = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
                         //var verified = await Player.Game.HandleGameDataAsync(reader, Player, toPlayer);
-                        var msg = BitConverter.ToString(reader.Buffer);
+                        var msg = BitConverter.ToString(rCopy2.Buffer);
                         _logger.LogInformation($"Pre-edit " + msg);
                         _logger.LogInformation($"Pre-edit length " + msg.Length);
 
-                        reader = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
+                        rCopy2 = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
 
                         _logger.LogInformation($"Post-edit length " + msg.Length);
-                        msg = BitConverter.ToString(reader.Buffer);
+                        msg = BitConverter.ToString(rCopy2.Buffer);
                         _logger.LogInformation($"Post-edit " + msg);
                         //if (verified != null)
                         if(reader != null)
