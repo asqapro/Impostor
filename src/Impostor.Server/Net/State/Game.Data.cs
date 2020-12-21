@@ -254,7 +254,15 @@ namespace Impostor.Server.Net.State
                             if (isBlocked)
                             {
                                 //return false;
+                                var msg = BitConverter.ToString(pCopy.Buffer);
+                                _logger.LogInformation($"pCopy Pre-edit " + pCopy);
+                                _logger.LogInformation($"pCopy Pre-edit length " + pCopy.Length);
+
                                 pCopy.RemoveMessage(pCopy);
+
+                                _logger.LogInformation($"pCopy Post-edit length " + pCopy.Length);
+                                msg = BitConverter.ToString(pCopy.Buffer);
+                                _logger.LogInformation($"pCopy Post-edit " + msg);
                                 //pCopy = reader;
                                 //return pCopy;
                             }

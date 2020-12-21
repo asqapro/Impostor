@@ -156,7 +156,6 @@ namespace Impostor.Server.Net
                         //var verified = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
                         //var verified = await Player.Game.HandleGameDataAsync(reader, Player, toPlayer);
                         var msg = BitConverter.ToString(reader.Buffer);
-
                         _logger.LogInformation($"Pre-edit " + msg);
                         _logger.LogInformation($"Pre-edit length " + msg.Length);
 
