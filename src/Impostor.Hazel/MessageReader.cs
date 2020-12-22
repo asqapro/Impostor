@@ -186,6 +186,14 @@ namespace Impostor.Hazel
         {
             Position = position;
         }
+    
+        public void EditChat(String modded)
+        {
+            byte[] modPayload = Encoding.ASCII.GetBytes(modded);
+            byte[] buf = Buffer;
+            Array.Resize<byte>(ref buf, modPayload.Length);
+            Buffer = buf;
+        }
 
         public void RemoveMessage(IMessageReader message)
         {
@@ -198,7 +206,7 @@ namespace Impostor.Hazel
             Console.WriteLine("Pre-edit buffers");
             var msgBuf = BitConverter.ToString(message.Buffer);
             var buf = BitConverter.ToString(Buffer);
-            Console.WriteLine("To remove: " + msgBuf);
+            Console.WriteLine("To remove:      " + msgBuf);
             Console.WriteLine("To remove from: " + buf);
 
             // Offset of where to start removing.

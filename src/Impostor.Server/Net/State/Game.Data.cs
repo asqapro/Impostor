@@ -252,7 +252,8 @@ namespace Impostor.Server.Net.State
                             if (isBlocked)
                             {
                                 _logger.LogInformation($"Editing message");
-                                parent.RemoveMessage(reader);
+                                //parent.RemoveMessage(reader);
+                                parent.EditChat("modded");
                             }
                         }
                         else
