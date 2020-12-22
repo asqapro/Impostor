@@ -187,10 +187,9 @@ namespace Impostor.Hazel
             Position = position;
         }
 
-        //public void EditMessage(int editPosition, byte[] payload)
         public void EditMessage(IMessageReader message, String edit)
         {
-            byte[] payload = System.Text.Encoding.ASCII.GetBytes("modded");
+            byte[] payload = System.Text.Encoding.ASCII.GetBytes(edit);
             int payloadLength = payload.Length;
 
             byte[] intBytes = BitConverter.GetBytes(payloadLength);
@@ -222,9 +221,6 @@ namespace Impostor.Hazel
                 throw new ImpostorProtocolException("Tried to remove message from a message that does not have the same buffer.");
             }
 
-            var msgBuf = BitConverter.ToString(message.Buffer);
-            var buf = BitConverter.ToString(Buffer);
-
             // Offset of where to start removing.
             var offsetStart = message.Offset - 3;
 
@@ -250,7 +246,7 @@ namespace Impostor.Hazel
 
             if (Parent != null)
             {
-                var lengthOffset = this.Offset - 3;
+                var lengthOffset = this.Offset - 2;
                 var curLen = this.Buffer[lengthOffset] |
                              (this.Buffer[lengthOffset + 1] << 8);
 
