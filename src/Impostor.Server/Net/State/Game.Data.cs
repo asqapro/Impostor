@@ -260,7 +260,7 @@ namespace Impostor.Server.Net.State
                                 byte[] intBytes = BitConverter.GetBytes(payloadLength);
                                 if (BitConverter.IsLittleEndian)
                                     Array.Reverse(intBytes);
-                                byte payloadSize = intBytes[0];
+                                byte payloadSize = intBytes[1];
                                 //byte payloadSize = ((byte)(payloadLength << 8));
 
                                 byte[] fixedPayload = new byte[payload.Length + 1];

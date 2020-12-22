@@ -189,6 +189,14 @@ namespace Impostor.Hazel
 
         public void EditMessage(int editPosition, byte[] payload)
         {
+
+            if ((Position + Offset) < payload.Length)
+            {
+                byte[] resizedBuffer = new byte[Position + Offset + 1];
+                Buffer.CopyTo(resizedBuffer, 0);
+                Buffer = resizedBuffer;
+            }
+
             Console.WriteLine("Pre-edit buffer:   " + BitConverter.ToString(Buffer));
             Console.WriteLine("Pre-edit payload:  " + BitConverter.ToString(payload));
             System.Buffer.BlockCopy(payload, 0, Buffer, editPosition, payload.Length);
