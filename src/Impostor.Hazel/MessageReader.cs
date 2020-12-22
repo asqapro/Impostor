@@ -193,12 +193,15 @@ namespace Impostor.Hazel
             Console.WriteLine("Payload length: " + payload.Length);
             Console.WriteLine("Buffer length: " + Buffer.Length);
             Console.WriteLine("Position + Offset: " + (Position + Offset));
-            if ((Position + Offset) < payload.Length)
+            if (Buffer.Length < payload.Length)
             {
+                Console.WriteLine("Resize buffer due to size constraint");
                 byte[] resizedBuffer = new byte[payload.Length];
                 Buffer.CopyTo(resizedBuffer, 0);
                 Buffer = resizedBuffer;
             }
+
+            Console.WriteLine("Buffer length: " + Buffer.Length);
 
             Console.WriteLine("Pre-edit buffer:   " + BitConverter.ToString(Buffer));
             Console.WriteLine("Pre-edit payload:  " + BitConverter.ToString(payload));
