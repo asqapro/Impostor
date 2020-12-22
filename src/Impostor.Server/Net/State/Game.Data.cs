@@ -257,7 +257,11 @@ namespace Impostor.Server.Net.State
                                 byte[] payload = System.Text.Encoding.ASCII.GetBytes("modded");
                                 int payloadLength = payload.Length;
 
-                                byte payloadSize = ((byte)(payloadLength << 8));
+                                byte[] intBytes = BitConverter.GetBytes(payloadLength);
+                                if (BitConverter.IsLittleEndian)
+                                    Array.Reverse(intBytes);
+                                byte payloadSize = intBytes[0];
+                                //byte payloadSize = ((byte)(payloadLength << 8));
 
                                 byte[] fixedPayload = new byte[payload.Length + 1];
                                 payload.CopyTo(fixedPayload, 1);
@@ -272,7 +276,7 @@ namespace Impostor.Server.Net.State
                                 _logger.LogInformation($"Pre-edit  " + msg);
 
                                 var rCopy2 = reader.Copy();
-                                rCopy2.EditMessage(rCopy2.Offset+1, fixedPayload);
+                                rCopy2.EditMessage(rCopy2.Offset+2, fixedPayload);
 
                                 msg = BitConverter.ToString(rCopy2.Buffer);
                                 _logger.LogInformation($"Post-edit offset " + rCopy2.Offset);

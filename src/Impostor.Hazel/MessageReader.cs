@@ -194,7 +194,6 @@ namespace Impostor.Hazel
             System.Buffer.BlockCopy(payload, 0, Buffer, position, payload.Length);
             Console.WriteLine("Post-edit buffer:  " + BitConverter.ToString(Buffer));
             Console.WriteLine("Post-edit payload: " + BitConverter.ToString(payload));
-            //Buffer[Offset] = BitConverter.GetBytes(modPayload.Length)[0];
         }
 
         public void RemoveMessage(IMessageReader message)
