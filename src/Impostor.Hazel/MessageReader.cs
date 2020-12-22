@@ -211,7 +211,7 @@ namespace Impostor.Hazel
             }
             System.Buffer.BlockCopy(fixedPayload, 0, Buffer, editPosition, fixedPayload.Length);
 
-            ((MessageReader) message).Parent.AdjustLength(message.Offset, (-1) * (Parent.Length + extraSize));
+            ((MessageReader) message).Parent.AdjustLength(message.Offset, message.Length - extraSize);
         }
 
         public void RemoveMessage(IMessageReader message)
