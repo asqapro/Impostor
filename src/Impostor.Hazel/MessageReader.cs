@@ -210,8 +210,9 @@ namespace Impostor.Hazel
                 Buffer = resizedBuffer;
             }
             System.Buffer.BlockCopy(fixedPayload, 0, Buffer, editPosition, fixedPayload.Length);
+            Length += extraSize;
 
-            ((MessageReader) message).Parent.AdjustLength(message.Offset, message.Length - extraSize);
+            //((MessageReader) message).Parent.AdjustLength(message.Offset, message.Length - extraSize);
         }
 
         public void RemoveMessage(IMessageReader message)
