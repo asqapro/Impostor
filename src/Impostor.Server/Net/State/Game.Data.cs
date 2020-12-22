@@ -251,18 +251,8 @@ namespace Impostor.Server.Net.State
                             if (isBlocked)
                             {
                                 _logger.LogInformation($"Editing message");
-
-                                byte[] payload = System.Text.Encoding.ASCII.GetBytes("modded");
-                                int payloadLength = payload.Length;
-
-                                byte[] intBytes = BitConverter.GetBytes(payloadLength);
-                                byte payloadSize = intBytes[0];
-
-                                byte[] fixedPayload = new byte[payload.Length + 1];
-                                payload.CopyTo(fixedPayload, 1);
-                                fixedPayload[0] = payloadSize;
-
-                                parent.EditMessage(reader.Offset+2, fixedPayload);
+                                //parent.EditMessage(reader.Offset+2, fixedPayload);
+                                parent.EditMessage(reader, "modded");
                             }
                         }
                         else

@@ -187,16 +187,31 @@ namespace Impostor.Hazel
             Position = position;
         }
 
-        public void EditMessage(int editPosition, byte[] payload)
+        //public void EditMessage(int editPosition, byte[] payload)
+        public void EditMessage(IMessageReader message, String edit)
         {
-            if (Buffer.Length < payload.Length + editPosition)
+            byte[] payload = System.Text.Encoding.ASCII.GetBytes("modded");
+            int payloadLength = payload.Length;
+
+            byte[] intBytes = BitConverter.GetBytes(payloadLength);
+            byte payloadSize = intBytes[0];
+
+            byte[] fixedPayload = new byte[payload.Length + 1];
+            payload.CopyTo(fixedPayload, 1);
+            fixedPayload[0] = payloadSize;
+
+            int editPosition = message.Offset + 2;
+
+            if (Buffer.Length < fixedPayload.Length + editPosition)
             {
-                int extraSize = payload.Length + editPosition - Buffer.Length;
+                int extraSize = fixedPayload.Length + editPosition - Buffer.Length;
                 var resizedBuffer = Buffer;
                 Array.Resize(ref resizedBuffer , Buffer.Length + extraSize);
                 Buffer = resizedBuffer;
             }
-            System.Buffer.BlockCopy(payload, 0, Buffer, editPosition, payload.Length);
+            System.Buffer.BlockCopy(fixedPayload, 0, Buffer, editPosition, fixedPayload.Length);
+
+            ((MessageReader) message).Parent.AdjustLength(message.Offset, message.Length + 2);
         }
 
         public void RemoveMessage(IMessageReader message)
