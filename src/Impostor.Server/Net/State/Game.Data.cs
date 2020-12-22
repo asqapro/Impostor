@@ -265,11 +265,11 @@ namespace Impostor.Server.Net.State
 
                                 var msg = BitConverter.ToString(reader.Buffer);
                                 _logger.LogInformation($"==========CHAIN 2 EDIT MESSAGE START==========");
-                                _logger.LogInformation($"Pre-edit offset " + reader.Offset);
-                                _logger.LogInformation($"Pre-edit position " + reader.Position);
-                                _logger.LogInformation($"Pre-edit buffer length " + msg.Length);
-                                _logger.LogInformation($"Pre-edit message length " + reader.Length);
-                                _logger.LogInformation($"Pre-edit " + msg);
+                                _logger.LogInformation($"Pre-edit  offset " + reader.Offset);
+                                _logger.LogInformation($"Pre-edit  position " + reader.Position);
+                                _logger.LogInformation($"Pre-edit  buffer length " + msg.Length);
+                                _logger.LogInformation($"Pre-edit  message length " + reader.Length);
+                                _logger.LogInformation($"Pre-edit  " + msg);
 
                                 var rCopy2 = reader.Copy();
                                 rCopy2.EditMessage(rCopy2.Position, fixedPayload);
