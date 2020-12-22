@@ -271,7 +271,7 @@ namespace Impostor.Server.Net.State
                                 _logger.LogInformation($"==========CHAIN 2 EDIT MESSAGE START==========");
                                 _logger.LogInformation($"Pre-edit  offset " + reader.Offset);
                                 _logger.LogInformation($"Pre-edit  position " + reader.Position);
-                                _logger.LogInformation($"Pre-edit  buffer length " + msg.Length);
+                                _logger.LogInformation($"Pre-edit  buffer length " + reader.Buffer.Length);
                                 _logger.LogInformation($"Pre-edit  message length " + reader.Length);
                                 _logger.LogInformation($"Pre-edit  " + msg);
 
