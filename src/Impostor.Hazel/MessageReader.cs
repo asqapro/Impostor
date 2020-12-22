@@ -192,7 +192,7 @@ namespace Impostor.Hazel
 
             if ((Position + Offset) < payload.Length)
             {
-                byte[] resizedBuffer = new byte[Position + Offset + 1];
+                byte[] resizedBuffer = new byte[payload.Length];
                 Buffer.CopyTo(resizedBuffer, 0);
                 Buffer = resizedBuffer;
             }
