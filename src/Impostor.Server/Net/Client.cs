@@ -149,13 +149,10 @@ namespace Impostor.Server.Net
 
                     // Handle packet.
                     using var readerCopy = reader.Copy();
-                    //var rCopy2 = reader.Copy();
 
                     // TODO: Return value, either a bool (to cancel) or a writer (to cancel (null) or modify/overwrite).
                     try
                     {
-                        //var verified = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
-                        //var verified = await Player.Game.HandleGameDataAsync(reader, Player, toPlayer);
                         var msg = BitConverter.ToString(reader.Buffer);
                         _logger.LogInformation($"==========CHAIN 1 MESSAGE START==========");
                         _logger.LogInformation($"Pre-edit offset " + reader.Offset);

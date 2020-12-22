@@ -253,7 +253,6 @@ namespace Impostor.Server.Net.State
                             if (isBlocked)
                             {
                                 _logger.LogInformation($"Editing message");
-                                //parent.EditMessage(reader.Offset+2, fixedPayload);
                                 pMod.EditMessage(reader, "modded");
                             }
                         }
