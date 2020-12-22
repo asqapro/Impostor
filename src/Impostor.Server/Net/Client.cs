@@ -149,29 +149,29 @@ namespace Impostor.Server.Net
 
                     // Handle packet.
                     using var readerCopy = reader.Copy();
-                    var rCopy2 = reader.Copy();
+                    //var rCopy2 = reader.Copy();
 
                     // TODO: Return value, either a bool (to cancel) or a writer (to cancel (null) or modify/overwrite).
                     try
                     {
                         //var verified = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
                         //var verified = await Player.Game.HandleGameDataAsync(reader, Player, toPlayer);
-                        var msg = BitConverter.ToString(rCopy2.Buffer);
+                        var msg = BitConverter.ToString(reader.Buffer);
                         _logger.LogInformation($"==========CHAIN 1 MESSAGE START==========");
-                        _logger.LogInformation($"Pre-edit offset " + rCopy2.Offset);
-                        _logger.LogInformation($"Pre-edit position " + rCopy2.Position);
-                        _logger.LogInformation($"Pre-edit buffer length " + rCopy2.Buffer.Length);
-                        _logger.LogInformation($"Pre-edit message length " + rCopy2.Length);
+                        _logger.LogInformation($"Pre-edit offset " + reader.Offset);
+                        _logger.LogInformation($"Pre-edit position " + reader.Position);
+                        _logger.LogInformation($"Pre-edit buffer length " + reader.Buffer.Length);
+                        _logger.LogInformation($"Pre-edit message length " + reader.Length);
                         _logger.LogInformation($"Pre-edit " + msg);
 
-                        rCopy2 = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
-                        if(rCopy2 != null)
+                        reader = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
+                        if(reader != null)
                         {
-                            _logger.LogInformation($"Post-edit offset " + rCopy2.Offset);
-                            _logger.LogInformation($"Post-edit position " + rCopy2.Position);
-                            _logger.LogInformation($"Post-edit buffer length " + rCopy2.Buffer.Length);
-                            _logger.LogInformation($"Post-edit message length " + rCopy2.Length);
-                            msg = BitConverter.ToString(rCopy2.Buffer);
+                            _logger.LogInformation($"Post-edit offset " + reader.Offset);
+                            _logger.LogInformation($"Post-edit position " + reader.Position);
+                            _logger.LogInformation($"Post-edit buffer length " + reader.Buffer.Length);
+                            _logger.LogInformation($"Post-edit message length " + reader.Length);
+                            msg = BitConverter.ToString(reader.Buffer);
                             _logger.LogInformation($"Post-edit " + msg);
                             _logger.LogInformation($"==========CHAIN 1 MESSAGE END==========");
                         }

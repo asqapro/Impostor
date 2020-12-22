@@ -203,7 +203,7 @@ namespace Impostor.Hazel
             int editPosition = message.Offset + 2;
 
             int extraSize = 0;
-            if (Buffer.Length < fixedPayload.Length + editPosition)
+            if (Buffer.Length != fixedPayload.Length + editPosition)
             {
                 extraSize = fixedPayload.Length + editPosition - Buffer.Length;
                 var resizedBuffer = Buffer;
