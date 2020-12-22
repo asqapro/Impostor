@@ -193,10 +193,10 @@ namespace Impostor.Hazel
             Console.WriteLine("Payload length: " + payload.Length);
             Console.WriteLine("Buffer length: " + Buffer.Length);
             Console.WriteLine("Position + Offset: " + (Position + Offset));
-            if (Buffer.Length < payload.Length)
+            if (Buffer.Length < payload.Length + editPosition)
             {
-                int extraSize = payload.Length - Buffer.Length;
-                Console.WriteLine("Resize buffer due to size constraint");
+                int extraSize = payload.Length + editPosition - Buffer.Length;
+                Console.WriteLine("Extra size needed: " + extraSize);
                 var resizedBuffer = Buffer;
                 //Buffer.CopyTo(resizedBuffer, 0);
                 //Buffer = resizedBuffer;
