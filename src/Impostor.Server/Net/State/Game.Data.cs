@@ -262,7 +262,7 @@ namespace Impostor.Server.Net.State
                                 payload.CopyTo(fixedPayload, 1);
                                 fixedPayload[0] = payloadSize;
 
-                                reader.EditMessage(reader.Offset+2, fixedPayload);
+                                parent.EditMessage(reader.Offset+2, fixedPayload);
                             }
                         }
                         else
