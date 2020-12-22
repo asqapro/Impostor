@@ -186,15 +186,11 @@ namespace Impostor.Hazel
         {
             Position = position;
         }
-    
-        public void EditChat(String modded)
+
+        public void EditMessage(int position, byte[] payload)
         {
-            byte[] modPayload = Encoding.ASCII.GetBytes(modded);
-            byte[] buf = Buffer;
-            Array.Resize<byte>(ref buf, modPayload.Length+1);
-            Buffer = buf;
-            System.Buffer.BlockCopy(modPayload, 0, Buffer, Offset+1, modPayload.Length);
-            Buffer[Offset] = BitConverter.GetBytes(modPayload.Length)[0];
+            System.Buffer.BlockCopy(payload, 0, Buffer, position, payload.Length);
+            //Buffer[Offset] = BitConverter.GetBytes(modPayload.Length)[0];
         }
 
         public void RemoveMessage(IMessageReader message)

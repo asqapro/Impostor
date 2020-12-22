@@ -253,7 +253,34 @@ namespace Impostor.Server.Net.State
                             {
                                 _logger.LogInformation($"Editing message");
                                 //parent.RemoveMessage(reader);
-                                parent.EditChat("modded");
+
+                                byte[] payload = System.Text.Encoding.ASCII.GetBytes("modded");
+                                int payloadLength = payload.Length;
+
+                                byte payloadSize = ((byte)(payloadLength >> 8));
+
+                                byte[] fixedPayload = new byte[payload.Length + 1];
+                                payload.CopyTo(fixedPayload, 1);
+                                fixedPayload[0] = payloadSize;
+
+                                var msg = BitConverter.ToString(reader.Buffer);
+                                _logger.LogInformation($"==========CHAIN 2 EDIT MESSAGE START==========");
+                                _logger.LogInformation($"Pre-edit offset " + reader.Offset);
+                                _logger.LogInformation($"Pre-edit position " + reader.Position);
+                                _logger.LogInformation($"Pre-edit buffer length " + msg.Length);
+                                _logger.LogInformation($"Pre-edit message length " + reader.Length);
+                                _logger.LogInformation($"Pre-edit " + msg);
+
+                                var rCopy2 = reader.Copy();
+                                rCopy2.EditMessage(rCopy2.Position, fixedPayload);
+
+                                msg = BitConverter.ToString(rCopy2.Buffer);
+                                _logger.LogInformation($"Post-edit offset " + rCopy2.Offset);
+                                _logger.LogInformation($"Post-edit position " + rCopy2.Position);
+                                _logger.LogInformation($"Post-edit buffer length " + msg.Length);
+                                _logger.LogInformation($"Post-edit message length " + rCopy2.Length);
+                                _logger.LogInformation($"Post-edit " + msg);
+                                _logger.LogInformation($"==========CHAIN 2 EDIT MESSAGE END==========");
                             }
                         }
                         else

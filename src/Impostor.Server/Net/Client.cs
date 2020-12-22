@@ -157,7 +157,7 @@ namespace Impostor.Server.Net
                         //var verified = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
                         //var verified = await Player.Game.HandleGameDataAsync(reader, Player, toPlayer);
                         var msg = BitConverter.ToString(rCopy2.Buffer);
-                        _logger.LogInformation($"==========MESSAGE START==========");
+                        _logger.LogInformation($"==========CHAIN 1 MESSAGE START==========");
                         _logger.LogInformation($"Pre-edit offset " + rCopy2.Offset);
                         _logger.LogInformation($"Pre-edit position " + rCopy2.Position);
                         _logger.LogInformation($"Pre-edit buffer length " + msg.Length);
@@ -173,7 +173,7 @@ namespace Impostor.Server.Net
                             _logger.LogInformation($"Post-edit message length " + rCopy2.Length);
                             msg = BitConverter.ToString(rCopy2.Buffer);
                             _logger.LogInformation($"Post-edit " + msg);
-                            _logger.LogInformation($"==========MESSAGE END==========");
+                            _logger.LogInformation($"==========CHAIN 1 MESSAGE END==========");
                         }
                         else
                         {
