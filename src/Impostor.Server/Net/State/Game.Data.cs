@@ -261,7 +261,7 @@ namespace Impostor.Server.Net.State
                                 if (BitConverter.IsLittleEndian)
                                     Array.Reverse(intBytes);
                                 byte payloadSize = intBytes[1];
-                                _logger.LogInformation($"Payload size bytes:" + BitConverter.ToString(intBytes);
+                                _logger.LogInformation($"Payload size bytes:" + BitConverter.ToString(intBytes));
 
                                 byte[] fixedPayload = new byte[payload.Length + 1];
                                 payload.CopyTo(fixedPayload, 1);
