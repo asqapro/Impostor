@@ -189,7 +189,10 @@ namespace Impostor.Hazel
 
         public void EditMessage(int editPosition, byte[] payload)
         {
-
+            Console.WriteLine("editPosition: " + editPosition);
+            Console.WriteLine("Payload length: " + payload.Length);
+            Console.WriteLine("Buffer length: " + Buffer.Length);
+            Console.WriteLine("Position + Offset: " + (Position + Offset));
             if ((Position + Offset) < payload.Length)
             {
                 byte[] resizedBuffer = new byte[payload.Length];
