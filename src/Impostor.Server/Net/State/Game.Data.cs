@@ -247,29 +247,22 @@ namespace Impostor.Server.Net.State
                         var netId = reader.ReadPackedUInt32();
                         if (_allObjectsFast.TryGetValue(netId, out var obj))
                         {
-                            //await obj.HandleRpc(sender, target, (RpcCalls) reader.ReadByte(), reader);
                             bool isBlocked = await obj.HandleRpc(sender, target, (RpcCalls) reader.ReadByte(), reader);
                             if (isBlocked)
                             {
                                 _logger.LogInformation($"Editing message");
-                                //parent.RemoveMessage(reader);
 
                                 byte[] payload = System.Text.Encoding.ASCII.GetBytes("modded");
                                 int payloadLength = payload.Length;
 
                                 byte[] intBytes = BitConverter.GetBytes(payloadLength);
-                                if (BitConverter.IsLittleEndian)
-                                    Array.Reverse(intBytes);
-                                    _logger.LogInformation($"Reversed bytes");
-                                byte payloadSize = intBytes[intBytes.Length-1];
-                                _logger.LogInformation($"Payload size bytes:" + BitConverter.ToString(intBytes));
+                                byte payloadSize = intBytes[0];
 
                                 byte[] fixedPayload = new byte[payload.Length + 1];
                                 payload.CopyTo(fixedPayload, 1);
                                 fixedPayload[0] = payloadSize;
 
-                                var rCopy = reader.Copy();
-                                rCopy.EditMessage(rCopy.Offset+2, fixedPayload);
+                                reader.EditMessage(reader.Offset+2, fixedPayload);
                             }
                         }
                         else
