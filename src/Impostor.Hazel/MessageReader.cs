@@ -216,9 +216,9 @@ namespace Impostor.Hazel
             //((MessageReader) message).Parent.AdjustLength(message.Offset, message.Length - extraSize);
         }
 
-        public void BadAdjustLength(int extraSize)
+        private void BadAdjustLength(int extraSize)
         {
-            Length += extraSize;
+            this.Length += extraSize;
             if (Parent != null)
             {
                 Parent.BadAdjustLength(extraSize);
