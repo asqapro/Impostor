@@ -160,7 +160,7 @@ namespace Impostor.Server.Net
                         _logger.LogInformation($"==========CHAIN 1 MESSAGE START==========");
                         _logger.LogInformation($"Pre-edit offset " + rCopy2.Offset);
                         _logger.LogInformation($"Pre-edit position " + rCopy2.Position);
-                        _logger.LogInformation($"Pre-edit buffer length " + msg.Length);
+                        _logger.LogInformation($"Pre-edit buffer length " + rCopy2.Buffer.Length);
                         _logger.LogInformation($"Pre-edit message length " + rCopy2.Length);
                         _logger.LogInformation($"Pre-edit " + msg);
 
@@ -169,7 +169,7 @@ namespace Impostor.Server.Net
                         {
                             _logger.LogInformation($"Post-edit offset " + rCopy2.Offset);
                             _logger.LogInformation($"Post-edit position " + rCopy2.Position);
-                            _logger.LogInformation($"Post-edit buffer length " + msg.Length);
+                            _logger.LogInformation($"Post-edit buffer length " + rCopy2.Buffer.Length);
                             _logger.LogInformation($"Post-edit message length " + rCopy2.Length);
                             msg = BitConverter.ToString(rCopy2.Buffer);
                             _logger.LogInformation($"Post-edit " + msg);

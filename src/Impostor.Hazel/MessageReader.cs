@@ -202,16 +202,17 @@ namespace Impostor.Hazel
 
             int editPosition = message.Offset + 2;
 
+            int extraSize = 0;
             if (Buffer.Length < fixedPayload.Length + editPosition)
             {
-                int extraSize = fixedPayload.Length + editPosition - Buffer.Length;
+                extraSize = fixedPayload.Length + editPosition - Buffer.Length;
                 var resizedBuffer = Buffer;
                 Array.Resize(ref resizedBuffer , Buffer.Length + extraSize);
                 Buffer = resizedBuffer;
             }
             System.Buffer.BlockCopy(fixedPayload, 0, Buffer, editPosition, fixedPayload.Length);
 
-            ((MessageReader) message).Parent.AdjustLength(message.Offset, message.Length + 2);
+            ((MessageReader) message).Parent.AdjustLength(message.Offset, Parent.Length + extraSize);
         }
 
         public void RemoveMessage(IMessageReader message)
