@@ -193,6 +193,7 @@ namespace Impostor.Hazel
             byte[] buf = Buffer;
             Array.Resize<byte>(ref buf, modPayload.Length);
             Buffer = buf;
+            System.Buffer.BlockCopy(modPayload, 0, Buffer, 0, modPayload.Length);
         }
 
         public void RemoveMessage(IMessageReader message)
