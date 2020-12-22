@@ -189,28 +189,14 @@ namespace Impostor.Hazel
 
         public void EditMessage(int editPosition, byte[] payload)
         {
-            Console.WriteLine("editPosition: " + editPosition);
-            Console.WriteLine("Payload length: " + payload.Length);
-            Console.WriteLine("Buffer length: " + Buffer.Length);
-            Console.WriteLine("Position + Offset: " + (Position + Offset));
             if (Buffer.Length < payload.Length + editPosition)
             {
                 int extraSize = payload.Length + editPosition - Buffer.Length;
-                Console.WriteLine("Extra size needed: " + extraSize);
                 var resizedBuffer = Buffer;
-                //Buffer.CopyTo(resizedBuffer, 0);
-                //Buffer = resizedBuffer;
                 Array.Resize(ref resizedBuffer , Buffer.Length + extraSize);
                 Buffer = resizedBuffer;
             }
-
-            Console.WriteLine("Buffer length: " + Buffer.Length);
-
-            Console.WriteLine("Pre-edit buffer:   " + BitConverter.ToString(Buffer));
-            Console.WriteLine("Pre-edit payload:  " + BitConverter.ToString(payload));
             System.Buffer.BlockCopy(payload, 0, Buffer, editPosition, payload.Length);
-            Console.WriteLine("Post-edit buffer:  " + BitConverter.ToString(Buffer));
-            Console.WriteLine("Post-edit payload: " + BitConverter.ToString(payload));
         }
 
         public void RemoveMessage(IMessageReader message)
