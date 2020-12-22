@@ -246,7 +246,7 @@ namespace Impostor.Hazel
 
             if (Parent != null)
             {
-                var lengthOffset = this.Offset - 2;
+                var lengthOffset = this.Offset - 1;
                 var curLen = this.Buffer[lengthOffset] |
                              (this.Buffer[lengthOffset + 1] << 8);
 
