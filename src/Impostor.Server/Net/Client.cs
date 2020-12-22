@@ -165,14 +165,20 @@ namespace Impostor.Server.Net
                         _logger.LogInformation($"Pre-edit " + msg);
 
                         rCopy2 = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
-
-                        _logger.LogInformation($"Post-edit offset " + rCopy2.Offset);
-                        _logger.LogInformation($"Post-edit position " + rCopy2.Position);
-                        _logger.LogInformation($"Post-edit buffer length " + msg.Length);
-                        _logger.LogInformation($"Post-edit message length " + rCopy2.Length);
-                        msg = BitConverter.ToString(rCopy2.Buffer);
-                        _logger.LogInformation($"Post-edit " + msg);
-                        _logger.LogInformation($"==========MESSAGE END==========");
+                        if(rCopy2 != null)
+                        {
+                            _logger.LogInformation($"Post-edit offset " + rCopy2.Offset);
+                            _logger.LogInformation($"Post-edit position " + rCopy2.Position);
+                            _logger.LogInformation($"Post-edit buffer length " + msg.Length);
+                            _logger.LogInformation($"Post-edit message length " + rCopy2.Length);
+                            msg = BitConverter.ToString(rCopy2.Buffer);
+                            _logger.LogInformation($"Post-edit " + msg);
+                            _logger.LogInformation($"==========MESSAGE END==========");
+                        }
+                        else
+                        {
+                            _logger.LogInformation($"Post-edit null");
+                        }
                         //if (verified != null)
                         if(reader != null)
                         {
