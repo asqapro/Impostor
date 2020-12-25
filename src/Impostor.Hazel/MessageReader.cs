@@ -301,7 +301,7 @@ namespace Impostor.Hazel
                 this.Buffer[lengthOffset + 1] = (byte)(this.Buffer[lengthOffset + 1] >> 8);
 
             //  Recursively adjust length until there are no more parents
-                Parent.AdjustLength(offset, amount);
+                Parent.BadAdjustLength(offset, amount);
             }
         }
 
