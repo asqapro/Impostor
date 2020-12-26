@@ -61,7 +61,7 @@ namespace Impostor.Api.Net.Messages
 
         void Seek(int position);
 
-        public void EditMessage(IMessageReader message, String edit);
+        public void EditMessage(IMessageReader par, IMessageReader message, String edit);
 
         void RemoveMessage(IMessageReader message);
 

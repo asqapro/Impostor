@@ -196,7 +196,8 @@ namespace Impostor.Server.Net.State
             // Find target player.
             ClientPlayer target = null;
 
-            IMessageReader pMod = parent.Copy();
+            //IMessageReader pMod = parent.Copy();
+            var currPos = parent.Position;
 
             if (toPlayer)
             {
@@ -253,7 +254,7 @@ namespace Impostor.Server.Net.State
                             if (isBlocked)
                             {
                                 _logger.LogInformation($"Editing message");
-                                pMod.EditMessage(reader, "modded");
+                                parent.EditMessage(reader, reader, "modded");
                             }
                         }
                         else
@@ -415,7 +416,8 @@ namespace Impostor.Server.Net.State
                 }
             }
 
-            return pMod;
+            parent.Seek(currPos);
+            return parent;
         }
 
         private bool AddNetObject(InnerNetObject obj)

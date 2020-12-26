@@ -189,7 +189,7 @@ namespace Impostor.Hazel
 
         //This function really needs to be changed to be more generic
         //Maybe have it take an IMessageReader plus an offset plus a byte payload, and calculate the size changes inside the function
-        public void EditMessage(IMessageReader message, String edit)
+        public void EditMessage(IMessageReader par, IMessageReader message, String edit)
         {
             byte[] payload = System.Text.Encoding.ASCII.GetBytes(edit);
             int payloadLength = payload.Length;
@@ -216,9 +216,27 @@ namespace Impostor.Hazel
                 Buffer = resizedBuffer;
             }
 
+            var lengthOffset = message.Offset - 3;
+            var curLen = message.Buffer[lengthOffset] |
+                        (message.Buffer[lengthOffset + 1] << 8);
+
+            curLen += extraSize;
+
+            Buffer[lengthOffset] = (byte)curLen;
+            Buffer[lengthOffset + 1] = (byte)(message.Buffer[lengthOffset + 1] >> 8);
+
             System.Buffer.BlockCopy(fixedPayload, 0, Buffer, editPosition, fixedPayload.Length);
 
-            ((MessageReader) message).Parent.BadAdjustLength(message.Offset, message.Length + extraSize);
+            Console.WriteLine("Current message length: " + message.Length);
+            Console.WriteLine("Current parent message length: " + ((MessageReader) message).Parent.Length);
+
+            ((MessageReader) message).Parent.BadAdjustLength(message.Offset, extraSize);
+
+
+            Console.WriteLine("Post edit message length: " + message.Length);
+            Console.WriteLine("Post edit parent message length: " + ((MessageReader) message).Parent.Length);
+
+
         }
 
         public void RemoveMessage(IMessageReader message)
@@ -268,6 +286,7 @@ namespace Impostor.Hazel
 
         private void BadAdjustLength(int offset, int amount)
         {
+            Console.WriteLine("Bad adjust length by: " + amount);
             this.Length += amount;
 
             if (this.ReadPosition > offset)
