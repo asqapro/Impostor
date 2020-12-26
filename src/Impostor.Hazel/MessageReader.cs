@@ -189,28 +189,15 @@ namespace Impostor.Hazel
 
         //This function really needs to be changed to be more generic
         //Maybe have it take an IMessageReader plus an offset plus a byte payload, and calculate the size changes inside the function
-        public void EditMessage(IMessageReader par, IMessageReader message, String edit)
+        public void EditMessage(IMessageReader message, byte[] payload)
         {
-            byte[] payload = System.Text.Encoding.ASCII.GetBytes(edit);
-            int payloadLength = payload.Length;
 
-            byte[] intBytes = BitConverter.GetBytes(payloadLength);
-            byte payloadSize = intBytes[0];
-
-            byte[] fixedPayload = new byte[payload.Length + 1];
-            payload.CopyTo(fixedPayload, 1);
-            fixedPayload[0] = payloadSize;
-
-            //This function assumes it is called when an RPC message is detected
-            //That means message.Offset points to the beginning of the RPC message info
-            //But points after the RPC message length and tag
-            //So adding 2 bytes to the Offset puts it right in front of the chat to edit, including the chat length
-            int editPosition = message.Offset + 2;
+            var editPosition = message.Offset + 2;
 
             int extraSize = 0;
-            if (Buffer.Length != fixedPayload.Length + editPosition)
+            if (Buffer.Length != payload.Length + editPosition)
             {
-                extraSize = fixedPayload.Length + editPosition - Buffer.Length;
+                extraSize = payload.Length + editPosition - Buffer.Length;
                 var resizedBuffer = Buffer;
                 Array.Resize(ref resizedBuffer , Buffer.Length + extraSize);
                 Buffer = resizedBuffer;
@@ -225,7 +212,7 @@ namespace Impostor.Hazel
             Buffer[lengthOffset] = (byte)curLen;
             Buffer[lengthOffset + 1] = (byte)(message.Buffer[lengthOffset + 1] >> 8);
 
-            System.Buffer.BlockCopy(fixedPayload, 0, Buffer, editPosition, fixedPayload.Length);
+            System.Buffer.BlockCopy(payload, 0, Buffer, editPosition, payload.Length);
 
             Console.WriteLine("Current message length: " + message.Length);
             Console.WriteLine("Current parent message length: " + ((MessageReader) message).Parent.Length);
@@ -235,8 +222,6 @@ namespace Impostor.Hazel
 
             Console.WriteLine("Post edit message length: " + message.Length);
             Console.WriteLine("Post edit parent message length: " + ((MessageReader) message).Parent.Length);
-
-
         }
 
         public void RemoveMessage(IMessageReader message)

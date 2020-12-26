@@ -26,7 +26,7 @@ namespace Impostor.Server.Net.Inner.Objects.Components
             _game = game;
         }
 
-        public override async ValueTask<bool> HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
+        public override async ValueTask<byte[]> HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
         {
             if (call != RpcCalls.EnterVent && call != RpcCalls.ExitVent)
             {

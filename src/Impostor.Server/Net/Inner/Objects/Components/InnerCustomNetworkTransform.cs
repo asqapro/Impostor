@@ -52,7 +52,7 @@ namespace Impostor.Server.Net.Inner.Objects.Components
             return new Vector2(XRange.Lerp(v1), YRange.Lerp(v2));
         }
 
-        public override ValueTask<bool> HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
+        public override ValueTask<byte[]> HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
         {
             if (call == RpcCalls.SnapTo)
             {

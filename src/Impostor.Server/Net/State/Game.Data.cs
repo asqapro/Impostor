@@ -250,11 +250,10 @@ namespace Impostor.Server.Net.State
                         var netId = reader.ReadPackedUInt32();
                         if (_allObjectsFast.TryGetValue(netId, out var obj))
                         {
-                            bool isBlocked = await obj.HandleRpc(sender, target, (RpcCalls) reader.ReadByte(), reader);
-                            if (isBlocked)
+                            byte[] editPayload = await obj.HandleRpc(sender, target, (RpcCalls) reader.ReadByte(), reader);
+                            if (editPayload != null)
                             {
-                                _logger.LogInformation($"Editing message");
-                                parent.EditMessage(reader, reader, "modded");
+                                parent.EditMessage(reader, editPayload);
                             }
                         }
                         else

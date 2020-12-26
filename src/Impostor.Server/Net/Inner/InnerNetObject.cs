@@ -16,7 +16,7 @@ namespace Impostor.Server.Net.Inner
 
         public SpawnFlags SpawnFlags { get; internal set; }
 
-        public abstract ValueTask<bool> HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader);
+        public abstract ValueTask<byte[]> HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader);
 
         public abstract bool Serialize(IMessageWriter writer, bool initialState);
 
