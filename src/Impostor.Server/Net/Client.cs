@@ -153,29 +153,7 @@ namespace Impostor.Server.Net
                     // TODO: Return value, either a bool (to cancel) or a writer (to cancel (null) or modify/overwrite).
                     try
                     {
-                        var msg = BitConverter.ToString(reader.Buffer);
-                        _logger.LogInformation($"==========CHAIN 1 MESSAGE START==========");
-                        _logger.LogInformation($"Pre-edit  offset " + reader.Offset);
-                        _logger.LogInformation($"Pre-edit  position " + reader.Position);
-                        _logger.LogInformation($"Pre-edit  buffer length " + reader.Buffer.Length);
-                        _logger.LogInformation($"Pre-edit  message length " + reader.Length);
-                        _logger.LogInformation($"Pre-edit  " + msg);
-
                         reader = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
-                        if(reader != null)
-                        {
-                            _logger.LogInformation($"Post-edit offset " + reader.Offset);
-                            _logger.LogInformation($"Post-edit position " + reader.Position);
-                            _logger.LogInformation($"Post-edit buffer length " + reader.Buffer.Length);
-                            _logger.LogInformation($"Post-edit message length " + reader.Length);
-                            msg = BitConverter.ToString(reader.Buffer);
-                            _logger.LogInformation($"Post-edit " + msg);
-                            _logger.LogInformation($"==========CHAIN 1 MESSAGE END==========");
-                        }
-                        else
-                        {
-                            _logger.LogInformation($"Post-edit null");
-                        }
                         if(reader != null)
                         {
                             // Broadcast packet to all other players.

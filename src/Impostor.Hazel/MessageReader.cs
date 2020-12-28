@@ -214,14 +214,7 @@ namespace Impostor.Hazel
 
             System.Buffer.BlockCopy(payload, 0, Buffer, editPosition, payload.Length);
 
-            Console.WriteLine("Current message length: " + message.Length);
-            Console.WriteLine("Current parent message length: " + ((MessageReader) message).Parent.Length);
-
             ((MessageReader) message).Parent.BadAdjustLength(message.Offset, extraSize);
-
-
-            Console.WriteLine("Post edit message length: " + message.Length);
-            Console.WriteLine("Post edit parent message length: " + ((MessageReader) message).Parent.Length);
         }
 
         public void RemoveMessage(IMessageReader message)
@@ -271,7 +264,6 @@ namespace Impostor.Hazel
 
         private void BadAdjustLength(int offset, int amount)
         {
-            Console.WriteLine("Bad adjust length by: " + amount);
             this.Length += amount;
 
             if (this.ReadPosition > offset)
