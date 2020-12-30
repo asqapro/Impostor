@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 using Impostor.Api;
 using Impostor.Api.Events.Managers;
 using Impostor.Api.Innersloth;
@@ -335,6 +336,51 @@ namespace Impostor.Server.Net.Inner.Objects
                         {
                             String newName = commandPieces[1];
                             chatMod = sender.Character.PlayerInfo.PlayerName + " is setting their name to " + commandPieces[1];
+                        }
+
+                        if(commandPieces.Length == 2 && commandPieces[0] == "/save")
+                        {
+                            if(_game.GameState != GameStates.Started)
+                            {
+                                using (BinaryWriter configWriter = new BinaryWriter(File.Open(commandPieces[1], FileMode.Create)))
+                                {
+                                    _game.Options.Serialize(configWriter, 3 /*or maybe _game.Version, but the options are 1, 2, or 3*/);
+                                    chatMod = sender.Character.PlayerInfo.PlayerName + " is saving the current game configuration to the file " + commandPieces[1];
+                                }
+                                if (!File.Exists(commandPieces[1]))
+                                {
+                                    //Broadcast error message that "Game Option save failed"
+                                    chatMod = commandPieces[1] + " was not created successfully.";
+                                }
+                            }
+                            else
+                            {
+                                //Broadcast error message that "Cannot use command during game"
+                                chatMod = commandPieces[0] + " not allowed during active game.";
+                            }
+                        }
+
+                        if(commandPieces.Length == 2 && commandPieces[0] == "/load")
+                        {
+                            if(_game.GameState != GameStates.Started)
+                            {
+                                if (File.Exists(commandPieces[1]))
+                                {
+                                    byte[] gameOptions = File.ReadAllBytes(commandPieces[1]);
+                                    var memory = new ReadOnlyMemory<byte>(gameOptions);
+                                    _game.Options.Deserialize(memory);
+                                }
+                                else
+                                {
+                                    //Broadcast error message that "Game Option load failed"
+                                    chatMod = commandPieces[1] + " was not loaded successfully.";
+                                }
+                            }
+                            else
+                            {
+                                //Broadcast error message that "Cannot use command during game"
+                                chatMod = commandPieces[0] + " not allowed during active game.";
+                            }    
                         }
 
                         byte[] payload = System.Text.Encoding.ASCII.GetBytes(chatMod);
