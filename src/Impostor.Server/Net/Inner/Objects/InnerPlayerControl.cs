@@ -334,7 +334,7 @@ namespace Impostor.Server.Net.Inner.Objects
                         if (commandPieces.Length == 2 && commandPieces[0] == "/setname")
                         {
                             String newName = commandPieces[1];
-                            chatMod = sender.Chatacter.PlayerInfo.PlayerName + " is setting their name to " + commandPieces[1];
+                            chatMod = sender.Character.PlayerInfo.PlayerName + " is setting their name to " + commandPieces[1];
                         }
 
                         byte[] payload = System.Text.Encoding.ASCII.GetBytes(chatMod);
