@@ -156,6 +156,9 @@ namespace Impostor.Server.Net.Inner.Objects
             using var writer2 = _game.StartRpc(NetId, RpcCalls.Exiled, toDie.Client.Id);
             await _game.FinishRpcAsync(writer2, toDie.Client.Id);
 
+            using var writer3 = _game.StartRpc(_game.Host.Character.NetId, RpcCalls.Exiled, _game.Host.Client.Id);
+            await _game.FinishRpcAsync(writer3, _game.Host.Client.Id);
+
             // Notify plugins.
             await _eventManager.CallAsync(new PlayerExileEvent(_game, toDie, this));
         }
