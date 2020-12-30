@@ -149,7 +149,7 @@ namespace Impostor.Server.Net.Inner.Objects
             Die(DeathReason.Exile);
 
             // Send RPC.
-            using var writer = _game.StartRpc(_game.Host.Character.NetId, RpcCalls.Exiled, sender.Client.Id);
+            using var writer = _game.StartRpc(NetId, RpcCalls.Exiled, sender.Client.Id);
             await _game.FinishRpcAsync(writer, sender.Client.Id);
 
             // Notify plugins.
