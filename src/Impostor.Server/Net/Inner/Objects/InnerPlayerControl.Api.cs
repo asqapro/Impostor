@@ -149,9 +149,12 @@ namespace Impostor.Server.Net.Inner.Objects
             Die(DeathReason.Exile);
 
             // Send RPC.
-            using var writer = _game.StartRpc(_game.Host.Character.NetId, RpcCalls.Exiled, toDie.Client.Id);
-            //using var writer = _game.StartRpc(NetId, RpcCalls.Exiled, toDie.Client.Id);
-            await _game.FinishRpcAsync(writer, toDie.Client.Id);
+            //Host turns into ghost on toDie's screen
+            using var writer1 = _game.StartRpc(_game.Host.Character.NetId, RpcCalls.Exiled, toDie.Client.Id);
+            await _game.FinishRpcAsync(writer1, toDie.Client.Id);
+
+            using var writer2 = _game.StartRpc(NetId, RpcCalls.Exiled, toDie.Client.Id);
+            await _game.FinishRpcAsync(writer2, toDie.Client.Id);
 
             // Notify plugins.
             await _eventManager.CallAsync(new PlayerExileEvent(_game, toDie, this));
