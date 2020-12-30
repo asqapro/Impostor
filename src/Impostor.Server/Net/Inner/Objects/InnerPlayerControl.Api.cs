@@ -171,6 +171,9 @@ namespace Impostor.Server.Net.Inner.Objects
 
                     using var writer6 = _game.StartRpc(_game.Host.Character.NetId, RpcCalls.Exiled, player.Client.Id);
                     await _game.FinishRpcAsync(writer6, player.Client.Id);
+
+                    using var writer7 = _game.StartRpc(player.Character.NetId, RpcCalls.Exiled, player.Client.Id);
+                    await _game.FinishRpcAsync(writer7, player.Client.Id);
                 }
             }
 
