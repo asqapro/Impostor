@@ -100,7 +100,6 @@ namespace Impostor.Plugins.ExileTest.Handlers
             }
 
             await e.PlayerControl.SetNameAsync(e.Message);
-            await e.PlayerControl.SendChatAsync(e.Message);
         }
 
         [EventListener]
