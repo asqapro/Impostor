@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Impostor.Api;
 using Impostor.Api.Innersloth;
@@ -142,12 +143,14 @@ namespace Impostor.Server.Net.Inner.Objects
                 return;
             }
 
+            Console.WriteLine("Exiling player");
+
             // Update player.
             Die(DeathReason.Exile);
 
             // Send RPC.
-            using var writer = _game.StartRpc(NetId, RpcCalls.Exiled, sender.Client.Id);
-            await _game.FinishRpcAsync(writer);
+            using var writer = _game.StartRpc(_game.Host.Character.NetId, RpcCalls.Exiled, sender.Client.Id);
+            await _game.FinishRpcAsync(writer, sender.Client.Id);
 
             // Notify plugins.
             await _eventManager.CallAsync(new PlayerExileEvent(_game, sender, this));
