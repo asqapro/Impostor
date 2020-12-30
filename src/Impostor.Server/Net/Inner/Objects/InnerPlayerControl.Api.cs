@@ -134,5 +134,23 @@ namespace Impostor.Server.Net.Inner.Objects
             // Notify plugins.
             await _eventManager.CallAsync(new PlayerMurderEvent(_game, impostor, impostor.Character, this));
         }
+
+        public async ValueTask SetExiledAsync(IClientPlayer sender)
+        {
+            if (PlayerInfo.IsDead)
+            {
+                return;
+            }
+
+            // Update player.
+            Die(DeathReason.Exile);
+
+            // Send RPC.
+            using var writer = _game.StartRpc(NetId, RpcCalls.Exiled, sender.Client.Id);
+            await _game.FinishRpcAsync(writer);
+
+            // Notify plugins.
+            await _eventManager.CallAsync(new PlayerExileEvent(_game, sender, this));
+        }
     }
 }
