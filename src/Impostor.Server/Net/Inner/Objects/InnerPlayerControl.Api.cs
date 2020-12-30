@@ -150,30 +150,27 @@ namespace Impostor.Server.Net.Inner.Objects
 
             // Send RPC.
             //Host turns into ghost on toDie's screen
-            using var writer1 = _game.StartRpc(_game.Host.Character.NetId, RpcCalls.Exiled, toDie.Client.Id);
-            await _game.FinishRpcAsync(writer1, toDie.Client.Id);
+            //using var writer1 = _game.StartRpc(_game.Host.Character.NetId, RpcCalls.Exiled, toDie.Client.Id);
+            //await _game.FinishRpcAsync(writer1, toDie.Client.Id);
 
+            //toDie turns into a ghost on toDie's screen
             using var writer2 = _game.StartRpc(NetId, RpcCalls.Exiled, toDie.Client.Id);
             await _game.FinishRpcAsync(writer2, toDie.Client.Id);
 
-            using var writer3 = _game.StartRpc(_game.Host.Character.NetId, RpcCalls.Exiled, _game.Host.Client.Id);
-            await _game.FinishRpcAsync(writer3, _game.Host.Client.Id);
+            //Host turns into a ghost on host's screen
+            //using var writer3 = _game.StartRpc(_game.Host.Character.NetId, RpcCalls.Exiled, _game.Host.Client.Id);
+            //await _game.FinishRpcAsync(writer3, _game.Host.Client.Id);
 
-            using var writer4 = _game.StartRpc(NetId, RpcCalls.Exiled, _game.Host.Client.Id);
-            await _game.FinishRpcAsync(writer4, _game.Host.Client.Id);
+            //toDie turns into a ghost on the host's screen
+            //using var writer4 = _game.StartRpc(NetId, RpcCalls.Exiled, _game.Host.Client.Id);
+            //await _game.FinishRpcAsync(writer4, _game.Host.Client.Id);
 
             foreach (var player in _game.Players)
             {
-                if (player.Character.PlayerInfo.PlayerName == "KEKW")
+                if (player.Client.Id != toDie.Client.Id)
                 {
                     using var writer5 = _game.StartRpc(NetId, RpcCalls.Exiled, player.Client.Id);
                     await _game.FinishRpcAsync(writer5, player.Client.Id);
-
-                    using var writer6 = _game.StartRpc(_game.Host.Character.NetId, RpcCalls.Exiled, player.Client.Id);
-                    await _game.FinishRpcAsync(writer6, player.Client.Id);
-
-                    using var writer7 = _game.StartRpc(player.Character.NetId, RpcCalls.Exiled, player.Client.Id);
-                    await _game.FinishRpcAsync(writer7, player.Client.Id);
                 }
             }
 
