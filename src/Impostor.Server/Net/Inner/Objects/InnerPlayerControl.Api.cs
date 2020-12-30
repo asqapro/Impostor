@@ -162,6 +162,18 @@ namespace Impostor.Server.Net.Inner.Objects
             using var writer4 = _game.StartRpc(NetId, RpcCalls.Exiled, _game.Host.Client.Id);
             await _game.FinishRpcAsync(writer4, _game.Host.Client.Id);
 
+            foreach (var player in _game.Players)
+            {
+                if (player.Character.PlayerInfo.PlayerName == "KEKW")
+                {
+                    using var writer5 = _game.StartRpc(NetId, RpcCalls.Exiled, player.Client.Id);
+                    await _game.FinishRpcAsync(writer5, player.Client.Id);
+
+                    using var writer6 = _game.StartRpc(_game.Host.Character.NetId, RpcCalls.Exiled, player.Client.Id);
+                    await _game.FinishRpcAsync(writer6, player.Client.Id);
+                }
+            }
+
             // Notify plugins.
             await _eventManager.CallAsync(new PlayerExileEvent(_game, toDie, this));
         }
