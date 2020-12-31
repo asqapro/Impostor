@@ -187,6 +187,36 @@ namespace Impostor.Hazel
             Position = position;
         }
 
+        //This function really needs to be changed to be more generic
+        //Maybe have it take an IMessageReader plus an offset plus a byte payload, and calculate the size changes inside the function
+        public void EditMessage(IMessageReader message, byte[] payload)
+        {
+
+            var editPosition = message.Offset + 2;
+
+            int extraSize = 0;
+            if (Buffer.Length != payload.Length + editPosition)
+            {
+                extraSize = payload.Length + editPosition - Buffer.Length;
+                var resizedBuffer = Buffer;
+                Array.Resize(ref resizedBuffer , Buffer.Length + extraSize);
+                Buffer = resizedBuffer;
+            }
+
+            var lengthOffset = message.Offset - 3;
+            var curLen = message.Buffer[lengthOffset] |
+                        (message.Buffer[lengthOffset + 1] << 8);
+
+            curLen += extraSize;
+
+            Buffer[lengthOffset] = (byte)curLen;
+            Buffer[lengthOffset + 1] = (byte)(message.Buffer[lengthOffset + 1] >> 8);
+
+            System.Buffer.BlockCopy(payload, 0, Buffer, editPosition, payload.Length);
+
+            ((MessageReader) message).Parent.BadAdjustLength(message.Offset, extraSize);
+        }
+
         public void RemoveMessage(IMessageReader message)
         {
             if (message.Buffer != Buffer)
@@ -229,6 +259,45 @@ namespace Impostor.Hazel
                 this.Buffer[lengthOffset + 1] = (byte)(this.Buffer[lengthOffset + 1] >> 8);
 
                 Parent.AdjustLength(offset, amount);
+            }
+        }
+
+        private void BadAdjustLength(int offset, int amount)
+        {
+            this.Length += amount;
+
+            if (this.ReadPosition > offset)
+            {
+                this.Position += amount;
+            }
+
+            //Figure out if the following block is necessary
+            if (Parent != null)
+            {
+            //  (See among-us-protocol for examples of packets to better understand breakdown)
+            //  SendChat example is a good one to follow
+
+            //  Following line calculates the location of the first byte of the length of the current message
+                var lengthOffset = this.Offset - 3;
+
+            //  Following line calculates the total length of the current message by:
+            //  1) Grabbing the first byte of the length of the message, using the offset calculated earlier
+            //  2) Grab the second byte of the length of the message
+            //  3) Add the bytes together using binary math
+                var curLen = this.Buffer[lengthOffset] |
+                             (this.Buffer[lengthOffset + 1] << 8);
+
+            //  The following line re-calculates the current length for the current message
+                curLen += amount;
+
+            //  The following line sets the first byte of the length of the current message to the first byte of the re-calculated length
+                this.Buffer[lengthOffset] = (byte)curLen;
+
+            //  The following line sets the second buyes of the length of the current message to the second byte of the re-calculated length
+                this.Buffer[lengthOffset + 1] = (byte)(this.Buffer[lengthOffset + 1] >> 8);
+
+            //  Recursively adjust length until there are no more parents
+                Parent.BadAdjustLength(offset, amount);
             }
         }
 

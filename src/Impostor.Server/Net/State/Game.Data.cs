@@ -190,10 +190,14 @@ namespace Impostor.Server.Net.State
             }
         }
 
-        public async ValueTask<bool> HandleGameDataAsync(IMessageReader parent, ClientPlayer sender, bool toPlayer)
+        //public async ValueTask<bool> HandleGameDataAsync(IMessageReader parent, ClientPlayer sender, bool toPlayer)
+        public async ValueTask<IMessageReader> HandleGameDataAsync(IMessageReader parent, ClientPlayer sender, bool toPlayer)
         {
             // Find target player.
             ClientPlayer target = null;
+
+            //IMessageReader pMod = parent.Copy();
+            var currPos = parent.Position;
 
             if (toPlayer)
             {
@@ -213,7 +217,7 @@ namespace Impostor.Server.Net.State
                 else if (!TryGetPlayer(targetId, out target))
                 {
                     _logger.LogWarning("Player {0} tried to send GameData to unknown player {1}.", sender.Client.Id, targetId);
-                    return false;
+                    return null;
                 }
 
                 _logger.LogTrace("Received GameData for target {0}.", targetId);
@@ -246,7 +250,11 @@ namespace Impostor.Server.Net.State
                         var netId = reader.ReadPackedUInt32();
                         if (_allObjectsFast.TryGetValue(netId, out var obj))
                         {
-                            await obj.HandleRpc(sender, target, (RpcCalls) reader.ReadByte(), reader);
+                            byte[] editPayload = await obj.HandleRpc(sender, target, (RpcCalls) reader.ReadByte(), reader);
+                            if (editPayload != null)
+                            {
+                                parent.EditMessage(reader, editPayload);
+                            }
                         }
                         else
                         {
@@ -274,7 +282,7 @@ namespace Impostor.Server.Net.State
                             // TODO: Remove message from stream properly.
                             if (ownerClientId == FakeClientId)
                             {
-                                return false;
+                                return null;
                             }
 
                             innerNetObject.SpawnFlags = (SpawnFlags) reader.ReadByte();
@@ -348,7 +356,7 @@ namespace Impostor.Server.Net.State
                                     sender.Client.Name,
                                     sender.Client.Id,
                                     netId);
-                                return false;
+                                return null;
                             }
 
                             RemoveNetObject(obj);
@@ -377,7 +385,7 @@ namespace Impostor.Server.Net.State
                                 "Player {0} ({1}) tried to send SceneChangeFlag for another player.",
                                 sender.Client.Name,
                                 sender.Client.Id);
-                            return false;
+                            return null;
                         }
 
                         sender.Scene = reader.ReadString();
@@ -403,11 +411,12 @@ namespace Impostor.Server.Net.State
                 if (sender.Client.Player == null)
                 {
                     // Disconnect handler was probably invoked, cancel the rest.
-                    return false;
+                    return null;
                 }
             }
 
-            return true;
+            parent.Seek(currPos);
+            return parent;
         }
 
         private bool AddNetObject(InnerNetObject obj)

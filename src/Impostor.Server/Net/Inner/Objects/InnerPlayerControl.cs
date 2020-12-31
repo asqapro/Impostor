@@ -46,8 +46,11 @@ namespace Impostor.Server.Net.Inner.Objects
 
         public InnerPlayerInfo PlayerInfo { get; internal set; }
 
-        public override async ValueTask HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
+        public override async ValueTask<byte[]> HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
         {
+
+            byte[] editPayload = null;
+
             switch (call)
             {
                 // Play an animation.
@@ -313,10 +316,40 @@ namespace Impostor.Server.Net.Inner.Objects
                     {
                         throw new ImpostorCheatException($"Client sent {nameof(RpcCalls.SendChat)} to a specific player instead of broadcast");
                     }
-
                     var chat = reader.ReadString();
 
+                    if (chat.StartsWith("/"))
+                    {
+                        var chatMod = "Invalid command or syntax";
+                        String[] commandPieces = chat.Split(" ", 2);
+                        if (commandPieces.Length == 2 && commandPieces[0] == "/whisper")
+                        {
+                            String[] whisperPieces = commandPieces[1].Split("'", 2, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
+                            if (whisperPieces.Length == 2 && whisperPieces[0] != "")
+                            {
+                                chatMod = sender.Character.PlayerInfo.PlayerName + " is whispering to " + whisperPieces[0];
+                            }
+                        }
+
+                        if (commandPieces.Length == 2 && commandPieces[0] == "/setname")
+                        {
+                            String newName = commandPieces[1];
+                            chatMod = sender.Character.PlayerInfo.PlayerName + " is setting their name to " + commandPieces[1];
+                        }
+
+                        byte[] payload = System.Text.Encoding.ASCII.GetBytes(chatMod);
+                        byte[] payloadLen = BitConverter.GetBytes(payload.Length);
+
+                        byte[] fixedPayload = new byte[payload.Length + 1];
+
+                        payload.CopyTo(fixedPayload, 1);
+                        fixedPayload[0] = payloadLen[0];
+
+                        editPayload = fixedPayload;
+                    }
+
                     await _eventManager.CallAsync(new PlayerChatEvent(_game, sender, this, chat));
+
                     break;
                 }
 
@@ -424,6 +457,7 @@ namespace Impostor.Server.Net.Inner.Objects
                     break;
                 }
             }
+            return editPayload;
         }
 
         public override bool Serialize(IMessageWriter writer, bool initialState)
