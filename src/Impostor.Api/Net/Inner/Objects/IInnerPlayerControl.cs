@@ -119,6 +119,6 @@ namespace Impostor.Api.Net.Inner.Objects
         /// </summary>
         /// /// <param name="sender">The client who is getting exiled.</param>
         /// <returns>Task that must be awaited.</returns>
-        ValueTask SetExiledAsync(IClientPlayer sender);
+        //ValueTask SetExiledAsync(IClientPlayer sender);
     }
 }
