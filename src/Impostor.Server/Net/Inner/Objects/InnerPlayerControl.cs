@@ -333,8 +333,17 @@ namespace Impostor.Server.Net.Inner.Objects
 
                         if (commandPieces.Length == 2 && commandPieces[0] == "/setname")
                         {
-                            String newName = commandPieces[1];
                             chatMod = sender.Character.PlayerInfo.PlayerName + " is setting their name to " + commandPieces[1];
+                        }
+
+                        if (commandPieces.Length == 2 && commandPieces[0] == "/save")
+                        {
+                            chatMod = sender.Character.PlayerInfo.PlayerName + " is saving the current game configuration to the file " + commandPieces[1];
+                        }
+
+                        if (commandPieces.Length == 2 && commandPieces[0] == "/load")
+                        {
+                            chatMod = sender.Character.PlayerInfo.PlayerName + " is loading a game configuration from " + commandPieces[1];
                         }
 
                         byte[] payload = System.Text.Encoding.ASCII.GetBytes(chatMod);
