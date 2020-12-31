@@ -136,7 +136,7 @@ namespace Impostor.Server.Net.Inner.Objects
             await _eventManager.CallAsync(new PlayerMurderEvent(_game, impostor, impostor.Character, this));
         }
 
-        /*public async ValueTask SetExiledAsync(IClientPlayer toDie)
+        public async ValueTask SetExiledAsync(IClientPlayer toDie)
         {
             if (PlayerInfo.IsDead)
             {
@@ -155,6 +155,6 @@ namespace Impostor.Server.Net.Inner.Objects
 
             // Notify plugins.
             await _eventManager.CallAsync(new PlayerExileEvent(_game, toDie, this));
-        }*/
+        }
     }
 }

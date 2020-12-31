@@ -94,6 +94,7 @@ namespace Impostor.Plugins.ExileTest.Handlers
                     if (player.Character.PlayerInfo.PlayerName == "tokill")
                     {
                         _logger.LogInformation($"Killing tokill");
+                        await player.Character.SetExiledAsync(player);
                     }
                 }
             }
