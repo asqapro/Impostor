@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Impostor.Api;
 using Impostor.Api.Events.Managers;
 using Impostor.Api.Innersloth;
@@ -16,6 +16,22 @@ using Microsoft.Extensions.Logging;
 
 namespace Impostor.Server.Net.Inner.Objects
 {
+    internal class CommandParser
+    {
+        public Dictionary<String, Command> Commands {get; set;}
+        public Dictionary<String, bool> Enabled {get; set;}
+
+    }
+
+    internal class Command
+    {
+        public int Length {get; set;}
+        public String[] Delims {get; set;}
+        public String Help {get; set;}
+        public bool Hostonly {get; set;}
+        public String Message {get; set;}
+    }
+    
     internal partial class InnerPlayerControl : InnerNetObject
     {
         private readonly ILogger<InnerPlayerControl> _logger;
@@ -326,25 +342,22 @@ namespace Impostor.Server.Net.Inner.Objects
 
                         var commandsFile = "CommandList.json";
                         using FileStream openStream = File.OpenRead(commandsFile);
-                        dynamic commandList = await JsonSerializer.DeserializeAsync<Object>(openStream);
-                        //if (commandList["Commands"] != JsonTokenType.Null)
-                        //{
-                        foreach (var command in commandList["Commands"])
+                        var commandList = await JsonSerializer.DeserializeAsync<CommandParser>(openStream);
+
+                        String senderCommand = chat.Split(" ", StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries)[0];
+
+                        String[] commandPieces = chat.Split(commandList.Commands[senderCommand].Delims, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
+                        if (commandPieces.Length == commandList.Commands[senderCommand].Length && commandList.Enabled[senderCommand])
                         {
-                            String[] commandPieces = chat.Split(command["delims"], StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
-                            if (commandPieces[0] == command && commandPieces.Length == command["length"] && commandList["Enabled"][command])
+                            var origin = sender.Character.PlayerInfo.PlayerName;
+                            var dest = "";
+                            if (commandPieces.Length > 1)
                             {
-                                var origin = sender.Character.PlayerInfo.PlayerName;
-                                var dest = "";
-                                if (commandPieces.Length > 1)
-                                {
-                                    dest = commandPieces[1];
-                                }
-                                chatMod = command["message"].Replace("%s", origin).Replace("%t", dest);
-                                break;
+                                dest = commandPieces[1];
                             }
+                            chatMod = commandList.Commands[senderCommand].Message.Replace("%s", origin).Replace("%t", dest);
+                            break;
                         }
-                        //}
 
                         byte[] payload = System.Text.Encoding.ASCII.GetBytes(chatMod);
                         byte[] payloadLen = BitConverter.GetBytes(payload.Length);
