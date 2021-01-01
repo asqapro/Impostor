@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Impostor.Api;
 using Impostor.Api.Events.Managers;
@@ -320,6 +322,13 @@ namespace Impostor.Server.Net.Inner.Objects
 
                     if (chat.StartsWith("/"))
                     {
+                        var commandsFile = "CommandList.json";
+                        using FileStream openStream = File.OpenRead(commandsFile);
+                        var commandList = await JsonSerializer.DeserializeAsync<Object>(openStream);
+                        Type commandListType = typeof(Object);
+                        commandListType.GetProperty("Commands");
+                        Console.WriteLine(commandListType.GetProperty("Commands"));
+
                         var chatMod = "Invalid command or syntax";
                         String[] commandPieces = chat.Split(" ", 2);
                         if (commandPieces.Length == 2 && commandPieces[0] == "/whisper")
