@@ -1,0 +1,43 @@
+{
+    "Commands": {
+        "/kill": {
+            "length": 2,
+            "delims": [" "],
+            "help": "/kill <target>",
+            "hostonly": true
+        },
+        "/whisper": {
+            "length": 3,
+            "delims": [" ", "'"],
+            "help": "/whisper <target> '<message>'",
+            "hostonly": false
+        },
+        "/setname": {
+            "length": 2,
+            "delims": [" "],
+            "help": "/setname <name>",
+            "hostonly": false
+        },
+        "/save": {
+            "length": 2,
+            "delims": [" "],
+            "help": "/save <filename>",
+            "hostonly": true
+        }
+        "/load": {
+            "length": 2,
+            "delims": [" "],
+            "help": "/load <filename>",
+            "hostonly": true
+        }
+    }
+    "Enabled": [
+        "/kill",
+        "/whisper",
+        "/setname",
+        "/save",
+        "/load"
+    ]
+    "Disabled": [
+    ]
+}
