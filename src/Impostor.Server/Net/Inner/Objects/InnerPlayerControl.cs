@@ -338,7 +338,9 @@ namespace Impostor.Server.Net.Inner.Objects
 
                     if (chat.StartsWith("/"))
                     {
-                        var chatMod = "Invalid command or syntax";
+                        var origin = sender.Character.PlayerInfo.PlayerName;
+
+                        var chatMod = origin + " entered an invalid command or syntax";
 
                         var commandsFile = "CommandList.json";
                         using FileStream openStream = File.OpenRead(commandsFile);
@@ -351,10 +353,13 @@ namespace Impostor.Server.Net.Inner.Objects
                         Console.WriteLine("Sender command: " + senderCommand);
                         Console.WriteLine("Command pieces length: " + commandPieces.Length);
                         Console.WriteLine("Enabled: " + commandList.Enabled[senderCommand]);
+                        foreach (var c in commandPieces)
+                        {
+                            Console.WriteLine("Command piece: " + c);
+                        }
 
                         if (commandPieces.Length == commandList.Commands[senderCommand].Length && commandList.Enabled[senderCommand])
                         {
-                            var origin = sender.Character.PlayerInfo.PlayerName;
                             var dest = "";
                             if (commandPieces.Length > 1)
                             {
