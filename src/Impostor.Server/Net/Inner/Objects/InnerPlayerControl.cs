@@ -322,37 +322,28 @@ namespace Impostor.Server.Net.Inner.Objects
 
                     if (chat.StartsWith("/"))
                     {
+                        var chatMod = "Invalid command or syntax";
+
                         var commandsFile = "CommandList.json";
                         using FileStream openStream = File.OpenRead(commandsFile);
-                        var commandList = await JsonSerializer.DeserializeAsync<Object>(openStream);
-                        Type commandListType = typeof(Object);
-                        commandListType.GetProperty("Commands");
-                        Console.WriteLine("Commands property value is: " + commandListType.GetProperty("Commands"));
-
-                        var chatMod = "Invalid command or syntax";
-                        String[] commandPieces = chat.Split(" ", 2);
-                        if (commandPieces.Length == 2 && commandPieces[0] == "/whisper")
+                        dynamic commandList = await JsonSerializer.DeserializeAsync<Object>(openStream);
+                        if (commandList != null)
                         {
-                            String[] whisperPieces = commandPieces[1].Split("'", 2, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
-                            if (whisperPieces.Length == 2 && whisperPieces[0] != "")
+                            foreach (var command in commandList.Commands)
                             {
-                                chatMod = sender.Character.PlayerInfo.PlayerName + " is whispering to " + whisperPieces[0];
+                                String[] commandPieces = chat.Split(command.delims, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
+                                if (commandPieces[0] == command && commandPieces.Length == command.length && commandList.Enabled.command)
+                                {
+                                    var origin = sender.Character.PlayerInfo.PlayerName;
+                                    var dest = "";
+                                    if (commandPieces.Length > 1)
+                                    {
+                                        dest = commandPieces[1];
+                                    }
+                                    chatMod = command.message.Replace("%s", origin).Replace("%t", dest);
+                                    break;
+                                }
                             }
-                        }
-
-                        if (commandPieces.Length == 2 && commandPieces[0] == "/setname")
-                        {
-                            chatMod = sender.Character.PlayerInfo.PlayerName + " is setting their name to " + commandPieces[1];
-                        }
-
-                        if (commandPieces.Length == 2 && commandPieces[0] == "/save")
-                        {
-                            chatMod = sender.Character.PlayerInfo.PlayerName + " is saving the current game configuration to the file " + commandPieces[1];
-                        }
-
-                        if (commandPieces.Length == 2 && commandPieces[0] == "/load")
-                        {
-                            chatMod = sender.Character.PlayerInfo.PlayerName + " is loading a game configuration from " + commandPieces[1];
                         }
 
                         byte[] payload = System.Text.Encoding.ASCII.GetBytes(chatMod);

@@ -4,40 +4,43 @@
             "length": 2,
             "delims": [" "],
             "help": "/kill <target>",
-            "hostonly": true
+            "hostonly": true,
+            "message": "%s is killing %t"
         },
         "/whisper": {
             "length": 3,
             "delims": [" ", "'"],
             "help": "/whisper <target> '<message>'",
-            "hostonly": false
+            "hostonly": false,
+            "message": "%s is whispering to %t"
         },
         "/setname": {
             "length": 2,
             "delims": [" "],
             "help": "/setname <name>",
-            "hostonly": false
+            "hostonly": false,
+            "message": "%s is setting name to %t"
         },
         "/save": {
             "length": 2,
             "delims": [" "],
             "help": "/save <filename>",
-            "hostonly": true
+            "hostonly": true,
+            "message": "%s is saving the game settings to %t"
         },
         "/load": {
             "length": 2,
             "delims": [" "],
             "help": "/load <filename>",
-            "hostonly": true
+            "hostonly": true,
+            "message": "%s is loading the game settings from %t"
         }
     },
-    "Enabled": [
-        "/kill",
-        "/whisper",
-        "/setname",
-        "/save",
-        "/load"
-    ],
-    "Disabled": [
-    ]
+    "Enabled": {
+        "/kill": true,
+        "/whisper": true,
+        "/setname": true,
+        "/save": true,
+        "/load": true
+    }
 }
