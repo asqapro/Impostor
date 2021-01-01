@@ -23,21 +23,21 @@
             "delims": [" "],
             "help": "/save <filename>",
             "hostonly": true
-        }
+        },
         "/load": {
             "length": 2,
             "delims": [" "],
             "help": "/load <filename>",
             "hostonly": true
         }
-    }
+    },
     "Enabled": [
         "/kill",
         "/whisper",
         "/setname",
         "/save",
         "/load"
-    ]
+    ],
     "Disabled": [
     ]
 }
