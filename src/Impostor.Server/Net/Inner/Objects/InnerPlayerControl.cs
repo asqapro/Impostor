@@ -327,7 +327,7 @@ namespace Impostor.Server.Net.Inner.Objects
                         var commandList = await JsonSerializer.DeserializeAsync<Object>(openStream);
                         Type commandListType = typeof(Object);
                         commandListType.GetProperty("Commands");
-                        Console.WriteLine(commandListType.GetProperty("Commands"));
+                        Console.WriteLine("Commands property value is: " + commandListType.GetProperty("Commands"));
 
                         var chatMod = "Invalid command or syntax";
                         String[] commandPieces = chat.Split(" ", 2);
