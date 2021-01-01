@@ -326,25 +326,25 @@ namespace Impostor.Server.Net.Inner.Objects
 
                         var commandsFile = "CommandList.json";
                         using FileStream openStream = File.OpenRead(commandsFile);
-                        dynamic commandList = await JsonSerializer.DeserializeAsync<dynamic>(openStream);
-                        if (commandList.Commands != JsonTokenType.Null)
+                        dynamic commandList = await JsonSerializer.DeserializeAsync<Object>(openStream);
+                        //if (commandList["Commands"] != JsonTokenType.Null)
+                        //{
+                        foreach (var command in commandList["Commands"])
                         {
-                            foreach (var command in commandList.Commands)
+                            String[] commandPieces = chat.Split(command["delims"], StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
+                            if (commandPieces[0] == command && commandPieces.Length == command["length"] && commandList["Enabled"][command])
                             {
-                                String[] commandPieces = chat.Split(command.delims, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
-                                if (commandPieces[0] == command && commandPieces.Length == command.length && commandList.Enabled.command)
+                                var origin = sender.Character.PlayerInfo.PlayerName;
+                                var dest = "";
+                                if (commandPieces.Length > 1)
                                 {
-                                    var origin = sender.Character.PlayerInfo.PlayerName;
-                                    var dest = "";
-                                    if (commandPieces.Length > 1)
-                                    {
-                                        dest = commandPieces[1];
-                                    }
-                                    chatMod = command.message.Replace("%s", origin).Replace("%t", dest);
-                                    break;
+                                    dest = commandPieces[1];
                                 }
+                                chatMod = command["message"].Replace("%s", origin).Replace("%t", dest);
+                                break;
                             }
                         }
+                        //}
 
                         byte[] payload = System.Text.Encoding.ASCII.GetBytes(chatMod);
                         byte[] payloadLen = BitConverter.GetBytes(payload.Length);
