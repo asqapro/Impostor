@@ -327,7 +327,7 @@ namespace Impostor.Server.Net.Inner.Objects
                         var commandsFile = "CommandList.json";
                         using FileStream openStream = File.OpenRead(commandsFile);
                         dynamic commandList = await JsonSerializer.DeserializeAsync<Object>(openStream);
-                        if (commandList.Commands == JsonTokenType.Null)
+                        if (commandList.Commands != JsonTokenType.Null)
                         {
                             foreach (var command in commandList.Commands)
                             {
