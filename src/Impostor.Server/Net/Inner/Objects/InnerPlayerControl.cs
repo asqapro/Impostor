@@ -348,7 +348,7 @@ namespace Impostor.Server.Net.Inner.Objects
 
                         String senderCommand = chat.Split(" ", StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries)[0];
 
-                        String[] commandPieces = chat.Split(commandList.Commands[senderCommand].Delims, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
+                        String[] commandPieces = chat.Split(commandList.Commands[senderCommand].Delims, commandList.Commands[senderCommand].Length, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
 
                         Console.WriteLine("Sender command: " + senderCommand);
                         Console.WriteLine("Command pieces length: " + commandPieces.Length);
