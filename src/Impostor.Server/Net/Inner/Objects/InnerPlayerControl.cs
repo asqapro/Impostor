@@ -26,7 +26,7 @@ namespace Impostor.Server.Net.Inner.Objects
     internal class Command
     {
         public int Length {get; set;}
-        public String[] Delims {get; set;}
+        public Char[] Delims {get; set;}
         public String Help {get; set;}
         public bool Hostonly {get; set;}
         public String Message {get; set;}
