@@ -338,35 +338,35 @@ namespace Impostor.Server.Net.Inner.Objects
 
                     if (chat.StartsWith("/"))
                     {
+                        String[] commandPieces = chat.Split(" ", StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
+
                         var origin = sender.Character.PlayerInfo.PlayerName;
-
-                        var chatMod = origin + " entered an invalid command or syntax";
-
-                        var commandsFile = "CommandList.json";
-                        using FileStream openStream = File.OpenRead(commandsFile);
-                        var commandList = await JsonSerializer.DeserializeAsync<CommandParser>(openStream);
-
-                        String senderCommand = chat.Split(" ", StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries)[0];
-
-                        String[] commandPieces = chat.Split(commandList.Commands[senderCommand].Delims, commandList.Commands[senderCommand].Length, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
-
-                        Console.WriteLine("Sender command: " + senderCommand);
-                        Console.WriteLine("Command pieces length: " + commandPieces.Length);
-                        Console.WriteLine("Enabled: " + commandList.Enabled[senderCommand]);
-                        foreach (var c in commandPieces)
+                        var dest = "";
+                        if (commandPieces.Length > 1)
                         {
-                            Console.WriteLine("Command piece: " + c);
+                            dest = commandPieces[1];
                         }
-
-                        if (commandPieces.Length == commandList.Commands[senderCommand].Length && commandList.Enabled[senderCommand])
+                        
+                        var chatMod = origin + " entered an invalid command or syntax";
+                        var commandsFile = "CommandList.txt";
+                        
+                        try
                         {
-                            var dest = "";
-                            if (commandPieces.Length > 1)
+                            var lines = File.ReadLines(commandsFile);
+                            foreach (var line in lines)
                             {
-                                dest = commandPieces[1];
+                                Char[] commandDelims = {' ', '"'};
+                                var commandSyntax = line.Split(commandDelims, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
+                                if (commandSyntax[0] == commandPieces[0])
+                                {
+                                    chatMod = commandSyntax[1].Replace("%s", origin).Replace("%t", dest);
+                                    break;
+                                }
                             }
-                            chatMod = commandList.Commands[senderCommand].Message.Replace("%s", origin).Replace("%t", dest);
-                            break;
+                        }
+                        catch
+                        {
+                            chatMod = "Failed to find list of commands. Inform the room host [" + _game.Host.Character.PlayerInfo.PlayerName + "]";
                         }
 
                         byte[] payload = System.Text.Encoding.ASCII.GetBytes(chatMod);
