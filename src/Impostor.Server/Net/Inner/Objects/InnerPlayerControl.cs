@@ -338,7 +338,7 @@ namespace Impostor.Server.Net.Inner.Objects
 
                     if (chat.StartsWith("/"))
                     {
-                        String[] commandPieces = chat.Split(" ", StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
+                        String[] commandPieces = chat.Split(" ", 2, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
 
                         var origin = sender.Character.PlayerInfo.PlayerName;
                         var dest = "";
