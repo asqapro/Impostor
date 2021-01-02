@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Impostor.Api;
@@ -338,14 +338,11 @@ namespace Impostor.Server.Net.Inner.Objects
 
                     if (chat.StartsWith("/"))
                     {
-                        String[] commandPieces = chat.Split(" ", 2, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
+                        String commandParsePattern = @"(/\w+)\s+((?:\w+\s+)+)";
+                        var match = Regex.Match(chat, commandParsePattern);
 
                         var origin = sender.Character.PlayerInfo.PlayerName;
-                        var dest = "";
-                        if (commandPieces.Length > 1)
-                        {
-                            dest = commandPieces[1];
-                        }
+                        var dest = match.Groups[2].Value.Trim();
 
                         var chatMod = origin + " entered an invalid command or syntax";
                         var commandsFile = "CommandsList.txt";
@@ -357,7 +354,7 @@ namespace Impostor.Server.Net.Inner.Objects
                             {
                                 Char[] commandDelims = {':'};
                                 var commandSyntax = line.Split(commandDelims, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
-                                if (commandSyntax[0] == commandPieces[0])
+                                if (commandSyntax[0] == match.Groups[1].Value)
                                 {
                                     chatMod = commandSyntax[1].Replace("%s", origin).Replace("%t", dest);
                                     break;
