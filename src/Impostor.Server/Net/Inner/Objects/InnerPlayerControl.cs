@@ -355,7 +355,7 @@ namespace Impostor.Server.Net.Inner.Objects
                             var lines = File.ReadLines(commandsFile);
                             foreach (var line in lines)
                             {
-                                Char[] commandDelims = {' ', '"'};
+                                Char[] commandDelims = {':'};
                                 var commandSyntax = line.Split(commandDelims, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
                                 if (commandSyntax[0] == commandPieces[0])
                                 {
