@@ -338,7 +338,7 @@ namespace Impostor.Server.Net.Inner.Objects
 
                     if (chat.StartsWith("/"))
                     {
-                        String commandParsePattern = @"(/\w+)\s+((?:\w+\s+)+)";
+                        String commandParsePattern = @"(/\w+)\s+((?:\w+\s*)+)";
                         var match = Regex.Match(chat, commandParsePattern);
 
                         var origin = sender.Character.PlayerInfo.PlayerName;
@@ -349,8 +349,7 @@ namespace Impostor.Server.Net.Inner.Objects
                         
                         try
                         {
-                            var lines = File.ReadLines(commandsFile);
-                            foreach (var line in lines)
+                            foreach (var line in File.ReadLines(commandsFile))
                             {
                                 Char[] commandDelims = {':'};
                                 var commandSyntax = line.Split(commandDelims, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
