@@ -346,9 +346,9 @@ namespace Impostor.Server.Net.Inner.Objects
                         {
                             dest = commandPieces[1];
                         }
-                        
+
                         var chatMod = origin + " entered an invalid command or syntax";
-                        var commandsFile = "CommandList.txt";
+                        var commandsFile = "CommandsList.txt";
                         
                         try
                         {
@@ -366,7 +366,7 @@ namespace Impostor.Server.Net.Inner.Objects
                         }
                         catch
                         {
-                            chatMod = "Failed to find list of commands. Inform the room host [" + _game.Host.Character.PlayerInfo.PlayerName + "]";
+                            chatMod = "Failed to find list of commands. Inform the room host <" + _game.Host.Character.PlayerInfo.PlayerName + ">";
                         }
 
                         byte[] payload = System.Text.Encoding.ASCII.GetBytes(chatMod);
