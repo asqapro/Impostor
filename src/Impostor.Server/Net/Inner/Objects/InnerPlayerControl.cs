@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using System.Linq;
-using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Impostor.Api;
 using Impostor.Api.Events.Managers;
 using Impostor.Api.Innersloth;
@@ -16,6 +16,22 @@ using Microsoft.Extensions.Logging;
 
 namespace Impostor.Server.Net.Inner.Objects
 {
+    internal class CommandParser
+    {
+        public Dictionary<String, Command> Commands {get; set;}
+        public Dictionary<String, bool> Enabled {get; set;}
+
+    }
+
+    internal class Command
+    {
+        public int Length {get; set;}
+        public Char[] Delims {get; set;}
+        public String Help {get; set;}
+        public bool Hostonly {get; set;}
+        public String Message {get; set;}
+    }
+    
     internal partial class InnerPlayerControl : InnerNetObject
     {
         private readonly ILogger<InnerPlayerControl> _logger;
@@ -322,37 +338,34 @@ namespace Impostor.Server.Net.Inner.Objects
 
                     if (chat.StartsWith("/"))
                     {
-                        var commandsFile = "CommandList.json";
-                        using FileStream openStream = File.OpenRead(commandsFile);
-                        var commandList = await JsonSerializer.DeserializeAsync<Object>(openStream);
-                        Type commandListType = typeof(Object);
-                        commandListType.GetProperty("Commands");
-                        Console.WriteLine(commandListType.GetProperty("Commands"));
+                        String commandParsePattern = @"(/\w+)\s+((?:\w+\s*)+)('.*')*";
+                        var match = Regex.Match(chat, commandParsePattern);
 
-                        var chatMod = "Invalid command or syntax";
-                        String[] commandPieces = chat.Split(" ", 2);
-                        if (commandPieces.Length == 2 && commandPieces[0] == "/whisper")
+                        var origin = sender.Character.PlayerInfo.PlayerName;
+                        var dest = match.Groups[2].Value.Trim();
+
+                        var chatMod = origin + " entered an invalid command or syntax";
+                        var commandsFile = "CommandsList.txt";
+                        
+                        if (!(match.Groups[1].Value == "/whisper" && !match.Groups[3].Success))
                         {
-                            String[] whisperPieces = commandPieces[1].Split("'", 2, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
-                            if (whisperPieces.Length == 2 && whisperPieces[0] != "")
+                            try
                             {
-                                chatMod = sender.Character.PlayerInfo.PlayerName + " is whispering to " + whisperPieces[0];
+                                foreach (var line in File.ReadLines(commandsFile))
+                                {
+                                    Char[] commandDelims = {':'};
+                                    var commandSyntax = line.Split(commandDelims, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
+                                    if (commandSyntax[0] == match.Groups[1].Value)
+                                    {
+                                        chatMod = commandSyntax[1].Replace("%s", origin).Replace("%t", dest);
+                                        break;
+                                    }
+                                }
                             }
-                        }
-
-                        if (commandPieces.Length == 2 && commandPieces[0] == "/setname")
-                        {
-                            chatMod = sender.Character.PlayerInfo.PlayerName + " is setting their name to " + commandPieces[1];
-                        }
-
-                        if (commandPieces.Length == 2 && commandPieces[0] == "/save")
-                        {
-                            chatMod = sender.Character.PlayerInfo.PlayerName + " is saving the current game configuration to the file " + commandPieces[1];
-                        }
-
-                        if (commandPieces.Length == 2 && commandPieces[0] == "/load")
-                        {
-                            chatMod = sender.Character.PlayerInfo.PlayerName + " is loading a game configuration from " + commandPieces[1];
+                            catch
+                            {
+                                chatMod = "Failed to find list of commands. Inform the room host <" + _game.Host.Character.PlayerInfo.PlayerName + ">";
+                            }
                         }
 
                         byte[] payload = System.Text.Encoding.ASCII.GetBytes(chatMod);

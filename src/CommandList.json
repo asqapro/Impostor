@@ -1,43 +1,46 @@
 {
     "Commands": {
         "/kill": {
-            "length": 2,
-            "delims": [" "],
-            "help": "/kill <target>",
-            "hostonly": true
+            "Length": 2,
+            "Delims": [" "],
+            "Help": "/kill <target>",
+            "Hostonly": true,
+            "Message": "%s is killing %t"
         },
         "/whisper": {
-            "length": 3,
-            "delims": [" ", "'"],
-            "help": "/whisper <target> '<message>'",
-            "hostonly": false
+            "Length": 3,
+            "Delims": [" ", "'"],
+            "Help": "/whisper <target> '<Message>'",
+            "Hostonly": false,
+            "Message": "%s is whispering to %t"
         },
         "/setname": {
-            "length": 2,
-            "delims": [" "],
-            "help": "/setname <name>",
-            "hostonly": false
+            "Length": 2,
+            "Delims": [" "],
+            "Help": "/setname <name>",
+            "Hostonly": false,
+            "Message": "%s is setting name to %t"
         },
         "/save": {
-            "length": 2,
-            "delims": [" "],
-            "help": "/save <filename>",
-            "hostonly": true
-        }
+            "Length": 2,
+            "Delims": [" "],
+            "Help": "/save <filename>",
+            "Hostonly": true,
+            "Message": "%s is saving the game settings to %t"
+        },
         "/load": {
-            "length": 2,
-            "delims": [" "],
-            "help": "/load <filename>",
-            "hostonly": true
+            "Length": 2,
+            "Delims": [" "],
+            "Help": "/load <filename>",
+            "Hostonly": true,
+            "Message": "%s is loading the game settings from %t"
         }
+    },
+    "Enabled": {
+        "/kill": true,
+        "/whisper": true,
+        "/setname": true,
+        "/save": true,
+        "/load": true
     }
-    "Enabled": [
-        "/kill",
-        "/whisper",
-        "/setname",
-        "/save",
-        "/load"
-    ]
-    "Disabled": [
-    ]
 }
