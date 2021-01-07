@@ -143,8 +143,6 @@ namespace Impostor.Server.Net.Inner.Objects
                 return;
             }
 
-            Console.WriteLine("Killing better way");
-
             // Update player.
             Die(DeathReason.Exile);
 
