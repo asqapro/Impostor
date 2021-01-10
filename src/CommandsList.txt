@@ -3,3 +3,4 @@
 /setname: %s is setting name to %t
 /save:    %s is saving the game settings to %t
 /load:    %s is loading the game settings from %t
+/shoot:   %s is shooting %t
