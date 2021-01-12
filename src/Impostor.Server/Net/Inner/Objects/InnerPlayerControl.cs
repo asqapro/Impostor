@@ -347,7 +347,11 @@ namespace Impostor.Server.Net.Inner.Objects
                         var chatMod = origin + " entered an invalid command or syntax";
                         var commandsFile = "CommandsList.txt";
                         
-                        if (!(match.Groups[1].Value == "/whisper" && !match.Groups[3].Success))
+                        if (chat == "/test command")
+                        {
+                            chatMod = "";
+                        }
+                        else if (!(match.Groups[1].Value == "/whisper" && !match.Groups[3].Success))
                         {
                             try
                             {
