@@ -255,8 +255,9 @@ namespace Impostor.Server.Net.State
                             {
                                 Console.WriteLine(editPayload.Length);
                             }
-                            if (editPayload != null && editPayload.Length == 0)
+                            if (editPayload != null && editPayload.Length == 1)
                             {
+                                Console.WriteLine("Test removing message");
                                 parent.RemoveMessage(reader);
                             }
                             else if (editPayload != null)
