@@ -354,7 +354,7 @@ namespace Impostor.Server.Net.Inner.Objects
                                 foreach (var line in File.ReadLines(commandsFile))
                                 {
                                     Char[] commandDelims = {':'};
-                                    var commandSyntax = line.Split(commandDelims, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
+                                    var commandSyntax = line.Split(commandDelims);
                                     if (commandSyntax[0] == match.Groups[1].Value)
                                     {
                                         chatMod = commandSyntax[1].Replace("%s", origin).Replace("%t", dest);
