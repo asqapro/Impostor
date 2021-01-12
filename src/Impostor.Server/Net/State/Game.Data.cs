@@ -251,18 +251,12 @@ namespace Impostor.Server.Net.State
                         if (_allObjectsFast.TryGetValue(netId, out var obj))
                         {
                             byte[] editPayload = await obj.HandleRpc(sender, target, (RpcCalls) reader.ReadByte(), reader);
-                            if (editPayload != null)
-                            {
-                                Console.WriteLine(editPayload.Length);
-                            }
                             if (editPayload != null && editPayload.Length == 1)
                             {
-                                Console.WriteLine("Test removing message");
                                 parent.RemoveMessage(reader);
                             }
                             else if (editPayload != null)
                             {
-                                Console.WriteLine(editPayload.Length);
                                 parent.EditMessage(reader, editPayload);
                             }
                         }
