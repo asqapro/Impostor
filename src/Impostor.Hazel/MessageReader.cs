@@ -262,45 +262,6 @@ namespace Impostor.Hazel
             }
         }
 
-        private void BadAdjustLength(int offset, int amount)
-        {
-            this.Length += amount;
-
-            if (this.ReadPosition > offset)
-            {
-                this.Position += amount;
-            }
-
-            //Figure out if the following block is necessary
-            if (Parent != null)
-            {
-            //  (See among-us-protocol for examples of packets to better understand breakdown)
-            //  SendChat example is a good one to follow
-
-            //  Following line calculates the location of the first byte of the length of the current message
-                var lengthOffset = this.Offset - 3;
-
-            //  Following line calculates the total length of the current message by:
-            //  1) Grabbing the first byte of the length of the message, using the offset calculated earlier
-            //  2) Grab the second byte of the length of the message
-            //  3) Add the bytes together using binary math
-                var curLen = this.Buffer[lengthOffset] |
-                             (this.Buffer[lengthOffset + 1] << 8);
-
-            //  The following line re-calculates the current length for the current message
-                curLen += amount;
-
-            //  The following line sets the first byte of the length of the current message to the first byte of the re-calculated length
-                this.Buffer[lengthOffset] = (byte)curLen;
-
-            //  The following line sets the second buyes of the length of the current message to the second byte of the re-calculated length
-                this.Buffer[lengthOffset + 1] = (byte)(this.Buffer[lengthOffset + 1] >> 8);
-
-            //  Recursively adjust length until there are no more parents
-                Parent.BadAdjustLength(offset, amount);
-            }
-        }
-
         public IMessageReader Copy(int offset = 0)
         {
             var reader = _pool.Get();
