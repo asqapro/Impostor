@@ -257,6 +257,7 @@ namespace Impostor.Server.Net.State
                             }
                             else if (editPayload != null)
                             {
+                                Console.WriteLine(editPayload.Length);
                                 parent.EditMessage(reader, editPayload);
                             }
                         }
