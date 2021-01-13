@@ -355,14 +355,16 @@ namespace Impostor.Server.Net.Inner.Objects
                                 {
                                     Char[] commandDelims = {':'};
                                     var commandSyntax = line.Split(commandDelims, StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries);
-                                    if (commandSyntax[0] == match.Groups[1].Value && commandSyntax.Length > 1)
+                                    if (commandSyntax[0] == match.Groups[1].Value)
                                     {
-                                        chatMod = commandSyntax[1].Replace("%s", origin).Replace("%t", dest);
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        chatMod = "";
+                                        if (commandSyntax.Length > 1)
+                                        {
+                                            chatMod = commandSyntax[1].Replace("%s", origin).Replace("%t", dest);
+                                        }
+                                        else
+                                        {
+                                            chatMod = "";
+                                        }
                                         break;
                                     }
                                 }
