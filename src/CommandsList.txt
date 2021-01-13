@@ -5,3 +5,4 @@
 /load:    %s is loading the game settings from %t
 /shoot:   %s is shooting %t
 /silentkill: 
+/setkillword: 
