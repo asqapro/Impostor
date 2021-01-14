@@ -354,10 +354,17 @@ namespace Impostor.Server.Net.Inner.Objects
                                 foreach (var line in File.ReadLines(commandsFile))
                                 {
                                     Char[] commandDelims = {':'};
-                                    var commandSyntax = line.Split(commandDelims, StringSplitOptions.TrimEntries|StringSplitOptions.RemoveEmptyEntries);
+                                    var commandSyntax = line.Split(commandDelims, StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries);
                                     if (commandSyntax[0] == match.Groups[1].Value)
                                     {
-                                        chatMod = commandSyntax[1].Replace("%s", origin).Replace("%t", dest);
+                                        if (commandSyntax.Length > 1)
+                                        {
+                                            chatMod = commandSyntax[1].Replace("%s", origin).Replace("%t", dest);
+                                        }
+                                        else
+                                        {
+                                            chatMod = "";
+                                        }
                                         break;
                                     }
                                 }
@@ -368,15 +375,22 @@ namespace Impostor.Server.Net.Inner.Objects
                             }
                         }
 
-                        byte[] payload = System.Text.Encoding.ASCII.GetBytes(chatMod);
-                        byte[] payloadLen = BitConverter.GetBytes(payload.Length);
+                        if (chatMod != "")
+                        {
+                            byte[] payload = System.Text.Encoding.ASCII.GetBytes(chatMod);
+                            byte[] payloadLen = BitConverter.GetBytes(payload.Length);
 
-                        byte[] fixedPayload = new byte[payload.Length + 1];
+                            byte[] fixedPayload = new byte[payload.Length + 1];
 
-                        payload.CopyTo(fixedPayload, 1);
-                        fixedPayload[0] = payloadLen[0];
+                            payload.CopyTo(fixedPayload, 1);
+                            fixedPayload[0] = payloadLen[0];
 
-                        editPayload = fixedPayload;
+                            editPayload = fixedPayload;
+                        }
+                        else
+                        {
+                            editPayload = new byte[] {};
+                        }
                     }
 
                     await _eventManager.CallAsync(new PlayerChatEvent(_game, sender, this, chat));
