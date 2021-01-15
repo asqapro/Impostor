@@ -1,4 +1,4 @@
-﻿using Impostor.Api.Events;
+using Impostor.Api.Events;
 using Impostor.Api.Events.Player;
 using Impostor.Api.Innersloth.Customization;
 using Microsoft.Extensions.Logging;
@@ -100,7 +100,7 @@ namespace Impostor.Plugins.TrackMovement.Handlers
         [EventListener]
         public void OnPlayerMovementEvent(IPlayerMovementEvent e)
         {
-            _logger.LogDebug($"Player moved to {e.PlayerControl.NetworkTransform.Position}");
+            //_logger.LogDebug($"Player moved to {e.PlayerControl.NetworkTransform.Position}");
         }
     }
 }

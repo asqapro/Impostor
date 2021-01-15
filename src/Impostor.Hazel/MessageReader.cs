@@ -187,6 +187,36 @@ namespace Impostor.Hazel
             Position = position;
         }
 
+        //This function really needs to be changed to be more generic
+        //Maybe have it take an IMessageReader plus an offset plus a byte payload, and calculate the size changes inside the function
+        public void EditMessage(IMessageReader message, byte[] payload)
+        {
+
+            var editPosition = message.Offset + 2;
+
+            int extraSize = 0;
+            if (Buffer.Length != payload.Length + editPosition)
+            {
+                extraSize = payload.Length + editPosition - Buffer.Length;
+                var resizedBuffer = Buffer;
+                Array.Resize(ref resizedBuffer , Buffer.Length + extraSize);
+                Buffer = resizedBuffer;
+            }
+
+            var lengthOffset = message.Offset - 3;
+            var curLen = message.Buffer[lengthOffset] |
+                        (message.Buffer[lengthOffset + 1] << 8);
+
+            curLen += extraSize;
+
+            Buffer[lengthOffset] = (byte)curLen;
+            Buffer[lengthOffset + 1] = (byte)(message.Buffer[lengthOffset + 1] >> 8);
+
+            System.Buffer.BlockCopy(payload, 0, Buffer, editPosition, payload.Length);
+
+            ((MessageReader) message).Parent.AdjustLength(message.Offset, extraSize * -1);
+        }
+
         public void RemoveMessage(IMessageReader message)
         {
             if (message.Buffer != Buffer)

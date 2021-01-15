@@ -153,8 +153,8 @@ namespace Impostor.Server.Net
                     // TODO: Return value, either a bool (to cancel) or a writer (to cancel (null) or modify/overwrite).
                     try
                     {
-                        var verified = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
-                        if (verified)
+                        reader = await Player.Game.HandleGameDataAsync(readerCopy, Player, toPlayer);
+                        if(reader != null)
                         {
                             // Broadcast packet to all other players.
                             using (var writer = MessageWriter.Get(messageType))

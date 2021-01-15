@@ -1,0 +1,10 @@
+/kill:    %s is killing %t
+/whisper: %s is whispering to %t
+/setname: %s is setting name to %t
+/save:    %s is saving the game settings to %t
+/load:    %s is loading the game settings from %t
+/shoot:   %s is shooting %t
+/silentkill: 
+/setkillword: 
+/investigate: 
+/reveal: 

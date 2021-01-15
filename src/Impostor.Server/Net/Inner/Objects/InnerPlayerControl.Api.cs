@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Impostor.Api;
 using Impostor.Api.Innersloth;
@@ -133,6 +134,24 @@ namespace Impostor.Server.Net.Inner.Objects
 
             // Notify plugins.
             await _eventManager.CallAsync(new PlayerMurderEvent(_game, impostor, impostor.Character, this));
+        }
+
+        public async ValueTask SetExiledAsync()
+        {
+            if (PlayerInfo.IsDead)
+            {
+                return;
+            }
+
+            // Update player.
+            Die(DeathReason.Exile);
+
+            // Send RPC.
+            using var writer = _game.StartRpc(NetId, RpcCalls.Exiled);
+            await _game.FinishRpcAsync(writer);
+
+            // Notify plugins.
+            await _eventManager.CallAsync(new PlayerExileEvent(_game, _game.GetClientPlayer(OwnerId), this));
         }
     }
 }

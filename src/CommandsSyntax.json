@@ -1,0 +1,34 @@
+{
+    "Commands": {
+        "/kill": {
+            "Length": 2,
+            "Help": "/kill <target>",
+            "Hostonly": true,
+            "Enabled": true
+        },
+        "/whisper": {
+            "Length": 3,
+            "Help": "/whisper <target> '<Message>'",
+            "Hostonly": false,
+            "Enabled": true
+        },
+        "/setname": {
+            "Length": 2,
+            "Help": "/setname <name>",
+            "Hostonly": false,
+            "Enabled": true
+        },
+        "/save": {
+            "Length": 2,
+            "Help": "/save <filename>",
+            "Hostonly": true,
+            "Enabled": true
+        },
+        "/load": {
+            "Length": 2,
+            "Help": "/load <filename>",
+            "Hostonly": true,
+            "Enabled": true
+        }
+    }
+}

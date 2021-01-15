@@ -1,12 +1,12 @@
-﻿using System;
-using System.Numerics;
-using System.Threading.Tasks;
 using Impostor.Api.Events;
 using Impostor.Api.Events.Player;
 using Impostor.Api.Innersloth.Customization;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Numerics;
+using System.Threading.Tasks;
 
-namespace Impostor.Plugins.Example.Handlers
+namespace Impostor.Plugins.ExileTest.Handlers
 {
     public class PlayerEventListener : IEventListener
     {
@@ -87,26 +87,25 @@ namespace Impostor.Plugins.Example.Handlers
                 await e.PlayerControl.NetworkTransform.SnapToAsync(new Vector2(1, 1));
             }
 
+            if (e.Message == "/kill tokill")
+            {
+                foreach (var player in e.Game.Players)
+                {
+                    if (player.Character.PlayerInfo.PlayerName == "tokill")
+                    {
+                        _logger.LogInformation($"Killing tokill");
+                        await player.Character.SetExiledAsync();
+                    }
+                }
+            }
+
             await e.PlayerControl.SetNameAsync(e.Message);
-            await e.PlayerControl.SendChatAsync(e.Message);
         }
 
         [EventListener]
         public void OnPlayerStartMeetingEvent(IPlayerStartMeetingEvent e)
         {
-            _logger.LogDebug($"Player {e.PlayerControl.PlayerInfo.PlayerName} start meeting, reason: " + (e.Body==null ? "Emergency call button" : "Found the body of the player "+e.Body.PlayerInfo.PlayerName));
-        }
-
-        [EventListener]
-        public void OnPlayerMovementEvent(IPlayerMovementEvent e)
-        {
-            _logger.LogDebug($"Player moved to {e.PlayerControl.NetworkTransform.Position}");
-        }
-
-        [EventListener]
-        public void OnPlayerVoted(IPlayerVotedEvent e)
-        {
-            _logger.LogDebug($"Player {e.PlayerControl.PlayerInfo.PlayerName} voted for {e.VoteType} {e.VotedFor?.PlayerInfo.PlayerName}");
+            _logger.LogDebug($"Player {e.PlayerControl.PlayerInfo.PlayerName} start meeting, reason: " + (e.Body == null ? "Emergency call button" : "Found the body of the player " + e.Body.PlayerInfo.PlayerName));
         }
     }
 }

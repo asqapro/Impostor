@@ -112,5 +112,13 @@ namespace Impostor.Api.Net.Inner.Objects
         /// /// <param name="impostor">The Impostor who kill.</param>
         /// <returns>Task that must be awaited.</returns>
         ValueTask SetMurderedByAsync(IClientPlayer impostor);
+
+        /// <summary>
+        ///     Sets the current to be exiled <see cref="IInnerPlayerControl"/>.
+        ///     Visible to all players.
+        /// </summary>
+        /// /// <param name="sender">The client who is getting exiled.</param>
+        /// <returns>Task that must be awaited.</returns>
+        ValueTask SetExiledAsync();
     }
 }

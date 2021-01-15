@@ -1,6 +1,8 @@
 using System;
-using System.Linq;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Impostor.Api;
 using Impostor.Api.Events.Managers;
 using Impostor.Api.Innersloth;
@@ -14,6 +16,22 @@ using Microsoft.Extensions.Logging;
 
 namespace Impostor.Server.Net.Inner.Objects
 {
+    internal class CommandParser
+    {
+        public Dictionary<String, Command> Commands {get; set;}
+        public Dictionary<String, bool> Enabled {get; set;}
+
+    }
+
+    internal class Command
+    {
+        public int Length {get; set;}
+        public Char[] Delims {get; set;}
+        public String Help {get; set;}
+        public bool Hostonly {get; set;}
+        public String Message {get; set;}
+    }
+    
     internal partial class InnerPlayerControl : InnerNetObject
     {
         private readonly ILogger<InnerPlayerControl> _logger;
@@ -26,7 +44,7 @@ namespace Impostor.Server.Net.Inner.Objects
             _eventManager = eventManager;
             _game = game;
 
-            Physics = ActivatorUtilities.CreateInstance<InnerPlayerPhysics>(serviceProvider, this);
+            Physics = ActivatorUtilities.CreateInstance<InnerPlayerPhysics>(serviceProvider, this, _eventManager, _game);
             NetworkTransform = ActivatorUtilities.CreateInstance<InnerCustomNetworkTransform>(serviceProvider, this, _game);
 
             Components.Add(this);
@@ -46,8 +64,11 @@ namespace Impostor.Server.Net.Inner.Objects
 
         public InnerPlayerInfo PlayerInfo { get; internal set; }
 
-        public override async ValueTask HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
+        public override async ValueTask<byte[]> HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
         {
+
+            byte[] editPayload = null;
+
             switch (call)
             {
                 // Play an animation.
@@ -313,10 +334,67 @@ namespace Impostor.Server.Net.Inner.Objects
                     {
                         throw new ImpostorCheatException($"Client sent {nameof(RpcCalls.SendChat)} to a specific player instead of broadcast");
                     }
-
                     var chat = reader.ReadString();
 
+                    if (chat.StartsWith("/"))
+                    {
+                        String commandParsePattern = @"(/\w+)\s+((?:\w+\s*)+)('.*')*";
+                        var match = Regex.Match(chat, commandParsePattern);
+
+                        var origin = sender.Character.PlayerInfo.PlayerName;
+                        var dest = match.Groups[2].Value.Trim();
+
+                        var chatMod = origin + " entered an invalid command or syntax";
+                        var commandsFile = "CommandsList.txt";
+                        
+                        if (!(match.Groups[1].Value == "/whisper" && !match.Groups[3].Success))
+                        {
+                            try
+                            {
+                                foreach (var line in File.ReadLines(commandsFile))
+                                {
+                                    Char[] commandDelims = {':'};
+                                    var commandSyntax = line.Split(commandDelims, StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries);
+                                    if (commandSyntax[0] == match.Groups[1].Value)
+                                    {
+                                        if (commandSyntax.Length > 1)
+                                        {
+                                            chatMod = commandSyntax[1].Replace("%s", origin).Replace("%t", dest);
+                                        }
+                                        else
+                                        {
+                                            chatMod = "";
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                chatMod = "Failed to find list of commands. Inform the room host <" + _game.Host.Character.PlayerInfo.PlayerName + ">";
+                            }
+                        }
+
+                        if (chatMod != "")
+                        {
+                            byte[] payload = System.Text.Encoding.ASCII.GetBytes(chatMod);
+                            byte[] payloadLen = BitConverter.GetBytes(payload.Length);
+
+                            byte[] fixedPayload = new byte[payload.Length + 1];
+
+                            payload.CopyTo(fixedPayload, 1);
+                            fixedPayload[0] = payloadLen[0];
+
+                            editPayload = fixedPayload;
+                        }
+                        else
+                        {
+                            editPayload = new byte[] {};
+                        }
+                    }
+
                     await _eventManager.CallAsync(new PlayerChatEvent(_game, sender, this, chat));
+
                     break;
                 }
 
@@ -424,6 +502,7 @@ namespace Impostor.Server.Net.Inner.Objects
                     break;
                 }
             }
+            return editPayload;
         }
 
         public override ValueTask<bool> SerializeAsync(IMessageWriter writer, bool initialState)

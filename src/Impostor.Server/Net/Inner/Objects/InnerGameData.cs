@@ -44,7 +44,7 @@ namespace Impostor.Server.Net.Inner.Objects
             return _allPlayers.TryGetValue(id, out var player) ? player : null;
         }
 
-        public override ValueTask HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
+        public override ValueTask<byte[]> HandleRpc(ClientPlayer sender, ClientPlayer? target, RpcCalls call, IMessageReader reader)
         {
             switch (call)
             {
@@ -159,6 +159,11 @@ namespace Impostor.Server.Net.Inner.Objects
             {
                 control.PlayerInfo = playerInfo;
             }
+        }
+
+        internal void RemovePlayer(InnerPlayerControl control)
+        {
+            _allPlayers.TryRemove(control.PlayerInfo.PlayerId, out _);
         }
 
         private void SetTasks(byte playerId, ReadOnlyMemory<byte> taskTypeIds)

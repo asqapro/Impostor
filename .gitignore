@@ -3,6 +3,6 @@
 /.vs
 /src/Impostor.Plugins.Debugger/Properties/launchSettings.json
 /tools
-
+/*.code-workspace
 .local/
 *.code-workspace
