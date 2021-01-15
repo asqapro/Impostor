@@ -52,6 +52,7 @@ namespace Impostor.Api.Games
         /// </summary>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
         ValueTask SyncSettingsAsync();
+        ValueTask SyncSettingsAsync(IClientPlayer toPlayer);
 
         /// <summary>
         ///     Sets the specified list as Impostor on all connected players.
