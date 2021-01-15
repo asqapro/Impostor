@@ -7,3 +7,4 @@
 /silentkill: 
 /setkillword: 
 /investigate: 
+/reveal: 
