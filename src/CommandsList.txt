@@ -6,3 +6,4 @@
 /shoot:   %s is shooting %t
 /silentkill: 
 /setkillword: 
+/investigate: 
