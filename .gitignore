@@ -5,3 +5,4 @@
 /tools
 /*.code-workspace
 .local/
+*.code-workspace

@@ -1,5 +1,6 @@
 using Impostor.Api.Events;
 using Impostor.Api.Events.Player;
+using System;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
