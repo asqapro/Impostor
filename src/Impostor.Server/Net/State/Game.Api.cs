@@ -47,7 +47,7 @@ namespace Impostor.Server.Net.State
             }
         }
 
-        public async ValueTask SyncSettingsAsync(IClientPlayer toPlayer)
+        public async ValueTask SyncSettingsToAsync(IClientPlayer toPlayer)
         {
             if (Host.Character == null)
             {
