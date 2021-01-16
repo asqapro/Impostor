@@ -34,7 +34,7 @@ namespace Impostor.Server.Net.State
             {
                 // Someone will probably forget to do this, so we include it here.
                 // If this is not done, the host will overwrite changes later with the defaults.
-                //Options.IsDefaults = false;
+                Options.IsDefaults = false;
 
                 await using (var memory = new MemoryStream())
                 await using (var writerBin = new BinaryWriter(memory))
