@@ -338,41 +338,38 @@ namespace Impostor.Server.Net.Inner.Objects
 
                     if (chat.StartsWith("/"))
                     {
-                        String commandParsePattern = @"(/\w+)\s+((?:\w+\s*)+)('.*')*";
+                        String commandParsePattern = @"^(/\w+)\s?((?:\w+\s?)*)";
                         var match = Regex.Match(chat, commandParsePattern);
 
                         var origin = sender.Character.PlayerInfo.PlayerName;
                         var dest = match.Groups[2].Value.Trim();
 
-                        var chatMod = origin + " entered an invalid command or syntax";
+                        var chatMod = $"{origin} entered an invalid command or syntax";
                         var commandsFile = "CommandsList.txt";
                         
-                        if (!(match.Groups[1].Value == "/whisper" && !match.Groups[3].Success))
+                        try
                         {
-                            try
+                            foreach (var line in File.ReadLines(commandsFile))
                             {
-                                foreach (var line in File.ReadLines(commandsFile))
+                                Char[] commandDelims = {':'};
+                                var commandSyntax = line.Split(commandDelims, StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries);
+                                if (commandSyntax[0] == match.Groups[1].Value)
                                 {
-                                    Char[] commandDelims = {':'};
-                                    var commandSyntax = line.Split(commandDelims, StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries);
-                                    if (commandSyntax[0] == match.Groups[1].Value)
+                                    if (commandSyntax.Length > 1)
                                     {
-                                        if (commandSyntax.Length > 1)
-                                        {
-                                            chatMod = commandSyntax[1].Replace("%s", origin).Replace("%t", dest);
-                                        }
-                                        else
-                                        {
-                                            chatMod = "";
-                                        }
-                                        break;
+                                        chatMod = commandSyntax[1].Replace("%s", origin).Replace("%t", dest);
                                     }
+                                    else
+                                    {
+                                        chatMod = "";
+                                    }
+                                    break;
                                 }
                             }
-                            catch
-                            {
-                                chatMod = "Failed to find list of commands. Inform the room host <" + _game.Host.Character.PlayerInfo.PlayerName + ">";
-                            }
+                        }
+                        catch
+                        {
+                            chatMod = $"Failed to find list of commands. Inform the room host <{_game.Host.Character.PlayerInfo.PlayerName}>";
                         }
 
                         if (chatMod != "")

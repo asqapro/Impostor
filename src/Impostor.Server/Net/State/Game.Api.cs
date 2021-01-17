@@ -47,6 +47,30 @@ namespace Impostor.Server.Net.State
             }
         }
 
+        public async ValueTask SyncSettingsToAsync(IClientPlayer toPlayer)
+        {
+            if (Host.Character == null)
+            {
+                throw new ImpostorException("Attempted to set infected when the host was not spawned.");
+            }
+
+            using (var writer = StartRpc(Host.Character.NetId, RpcCalls.SyncSettings, toPlayer.Client.Id))
+            {
+                // Someone will probably forget to do this, so we include it here.
+                // If this is not done, the host will overwrite changes later with the defaults.
+                Options.IsDefaults = false;
+
+                await using (var memory = new MemoryStream())
+                await using (var writerBin = new BinaryWriter(memory))
+                {
+                    Options.Serialize(writerBin, GameOptionsData.LatestVersion);
+                    writer.WriteBytesAndSize(memory.ToArray());
+                }
+
+                await FinishRpcAsync(writer);
+            }
+        }
+
         public async ValueTask SetInfectedAsync(IEnumerable<IInnerPlayerControl> players)
         {
             if (Host.Character == null)
