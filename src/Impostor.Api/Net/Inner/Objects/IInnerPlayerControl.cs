@@ -120,5 +120,12 @@ namespace Impostor.Api.Net.Inner.Objects
         /// /// <param name="sender">The client who is getting exiled.</param>
         /// <returns>Task that must be awaited.</returns>
         ValueTask SetExiledAsync();
+        
+        /// <summary>
+        ///     Sets all the player's tasks as complete, if the player is a crewmate.
+        ///     Visible to all players.
+        /// </summary>
+        /// <returns>Task that must be awaited.</returns>
+        ValueTask SetAllTasksCompleteAsync();
     }
 }
