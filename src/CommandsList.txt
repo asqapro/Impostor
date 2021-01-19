@@ -8,3 +8,4 @@
 /setkillword: 
 /investigate: 
 /reveal: 
+/protect: 
