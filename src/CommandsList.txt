@@ -9,3 +9,4 @@
 /investigate: 
 /reveal: 
 /protect: 
+/ignite: %s has ignited their targets!
